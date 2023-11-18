@@ -5,7 +5,8 @@
 #include <time.h>
 #include <termios.h>
 #include <string.h>
-
+  
+  
 typedef struct {
     char notes[6]; // Stores the current notes for A-F
     int score;
