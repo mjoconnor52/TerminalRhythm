@@ -70,6 +70,6 @@ int main() {
     // Clean up SDL_mixer and SDL
     Mix_CloseAudio();
     SDL_Quit();
-
+ 
     return 0;
 }
