@@ -3,17 +3,16 @@
 
 #define SAMPLE_RATE 44100
 #define AMPLITUDE 32767
-#define DURATION 1.0 // in seconds
 
-void generateSineWave(Uint8 *buffer, double frequency) {
-    Uint32 length = SAMPLE_RATE * DURATION;
+void generateSineWave(Uint8 *buffer, double frequency, double duration) {
+    Uint32 length = (Uint32)(SAMPLE_RATE * duration);
     double timeStep = 1.0 / SAMPLE_RATE;
-    
+
     for (Uint32 i = 0; i < length; ++i) {
         double t = i * timeStep;
         double wave = sin(2.0 * M_PI * frequency * t);
         Sint16 sample = (Sint16)(wave * AMPLITUDE);
-        
+
         buffer[i * 2] = (Uint8)(sample & 0xFF);
         buffer[i * 2 + 1] = (Uint8)((sample >> 8) & 0xFF);
     }
@@ -42,24 +41,23 @@ int main() {
 
     // List of frequencies to play
     double frequencies[] = {261.63, 329.63, 392.00, 523.25};  // C4, E4, G4, C5
+    double durations[] = {1.0, 1.0, 1.0, 1.0};  // Duration for each frequency
 
     for (int i = 0; i < sizeof(frequencies) / sizeof(frequencies[0]); ++i) {
-        Uint32 length = SAMPLE_RATE * DURATION;
+        Uint32 length = (Uint32)(SAMPLE_RATE * durations[i]);
         Uint8 *buffer = (Uint8 *)malloc(length * 2);  // 2 bytes per sample for AUDIO_S16SYS
 
-        generateSineWave(buffer, frequencies[i]);
+        generateSineWave(buffer, frequencies[i], durations[i]);
         SDL_QueueAudio(audioDevice, buffer, length * 2);
 
         free(buffer);
 
         // Wait for the sound to finish
-        SDL_Delay(DURATION * 1000);
+        SDL_Delay((Uint32)(durations[i] * 1000));
     }
 
     SDL_CloseAudioDevice(audioDevice);
     SDL_Quit();
 
     return 0;
-}
-
-
+} 
