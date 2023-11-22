@@ -41,7 +41,7 @@ int main() {
 
     // List of frequencies to play
     double frequencies[] = {261.63, 329.63, 392.00, 523.25};  // C4, E4, G4, C5
-    double durations[] = {1.0, 1.0, 1.0, 1.0};  // Duration for each frequency
+    double durations[] = {0.5, 1.0, 0.5, 1.0};  // Duration for each frequency
 
     for (int i = 0; i < sizeof(frequencies) / sizeof(frequencies[0]); ++i) {
         Uint32 length = (Uint32)(SAMPLE_RATE * durations[i]);
