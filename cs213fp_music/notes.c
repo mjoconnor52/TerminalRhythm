@@ -1,4 +1,12 @@
-#define NOTES_IN_SCALE 8 
+// This file is for defining notes, scales, triads 
+
+
+
+
+
+
+
+#define NOTES_IN_SCALE 12
 #define TRIAD 3 
 
 /* octave 0 */
@@ -144,69 +152,48 @@ const int B7  = 3951;
 const int C8  = 4186;
 
 /* Durations, in milliseconds */
-const int sixteenth = quarter / 4; 
-const int eighth = quarter / 2; 
-const int quarter = 1000; 
-const int half = quarter * 2; 
-const int whole = quarter * 4; 
-
-/* octave 4 */
-const int C4  =  262;
-const int Df4 =  277;
-const int Cs4 =  277;
-const int D4  =  294;
-const int Ef4 =  311;
-const int Ds4 =  311;
-const int E4  =  330;
-const int F4  =  349;
-const int Gf4 =  370;
-const int Fs4 =  370;
-const int G4  =  392;
-const int Gs4 =  415;
-const int Af4 =  415;
-const int A4  =  440;
-const int Bf4 =  466;
-const int As4 =  466; 
-const int B4  =  493;
+const double quarter = 1000; 
+const double sixteenth = quarter / 4; 
+const double eighth = quarter / 2; 
+const double half = quarter * 2; 
+const double whole = quarter * 4; 
 
 /* Scales 
    Uses octaves 4-6 
    8 pitches per scale 
    Includes every semitone major/minor scale 
 */
-int C_Major[NOTES_IN_SCALE] = {C4, D4, E4, F4, G4, A4, B4, C5, D5, E5, F5, G5}; 
-int C_Minor[NOTES_IN_SCALE] = {C4, D4, Ef4, F4, G4, Af4, Bf4, C5, D5, Ef5, F5, G5}; 
-int C_Sharp_Major[NOTES_IN_SCALE] = {Cs4, Ds4, F4, Fs4, Gs4, As4, C5, Cs5, Ds5, F5, Fs5, Gs5}; 
-int C_Sharp_Minor[NOTES_IN_SCALE] = {Cs4, Ds4, E4, Fs4, Gs4, A4, B5, Cs5, Ds5, E5, Fs5, Gs5}; 
-int D_Major[NOTES_IN_SCALE] = {D4, E4, Fs4, G4, A4, B4, Cs5, D5, E5, Fs5, G5, A5}; 
-int D_Minor[NOTES_IN_SCALE] = {D4, E4, F4, G4, A4, Bf4, C5, D5, E5, F5, G5, A5}; 
-int E_Flat_Major[NOTES_IN_SCALE] = {Ef4, F4, G4, Af4, Bf4, C5, D5, Ef5, F5, G5, Af5, Bf5}; 
-int E_Flat_Minor[NOTES_IN_SCALE] = {Ef4, F4, Gf4, Af4, Bf4, B4, Df5, Ef5, F5, Gf5, Af5, Bf5}; 
-int E_Major[NOTES_IN_SCALE] = {E4, Fs4, Gs4, A4, B4, Cs5, Ds5, E5, Fs5, Gs5, A5, B5}; 
-int E_Minor[NOTES_IN_SCALE] = {E4, Fs4, G4, A4, B4, C5, D5, E5, Fs5, G5, A5, B5}; 
-int F_Major[NOTES_IN_SCALE] = {F4, G4, A4, Bf4, C5, D5, E5, F5, G5, A5, Bf5, C6}; 
-int F_Minor[NOTES_IN_SCALE] = {F4, G4, Af4, Bf4, C5, Df5, Ef5, F5, G5, Af5, Bf5, C6}; 
-int G_Flat_Major[NOTES_IN_SCALE] = {Gf4, Af4, Bf4, B5, Df5, Ef5, F5, Gf5}; 
-int G_Flat_Minor[NOTES_IN_SCALE] = {Gf4, Af4, A4, B5, Df5, D5, E5, Gf5}; 
-int G_Major[NOTES_IN_SCALE] = {G4, A4, B4, C5, D5, E5, Fs5, G5}; 
-int G_Minor[NOTES_IN_SCALE] = {G4, A4, Bf4, C5, D5, Ef5, F5, G5}; 
-int A_Flat_Major[NOTES_IN_SCALE] = {Af4, Bf4, C5, Df5, Ef5, F5, G5, Af5}; 
-int A_Flat_Minor[NOTES_IN_SCALE] = {Af4, Bf4, B5, Df5, Ef5, E5, Gf5, Af5}; 
-int A_Major[NOTES_IN_SCALE] = {A4, B4, Cs5, D5, E5, Fs5, Gs5, A5}; 
-int A_Minor[NOTES_IN_SCALE] = {A4, B4, C5, D5, E5, F5, G5, A5}; 
-int B_Flat_Major[NOTES_IN_SCALE] = {Bf4, C5, D5, Ef5, F5, G5, A5, Bf5};   
-int B_Flat_Minor[NOTES_IN_SCALE] = {Bf4, C5, Df5, Ef5, F5, Gf5, Af5, Bf5};   
-int B_Major[NOTES_IN_SCALE] = {B4, Cs5, Ds5, E5, Fs5, Gs5, As5, B5}; 
-int B_Minor[NOTES_IN_SCALE] = {B4, Cs5, D5, E5, Fs5, G5, A5, B5}; 
-
-
+double C_Major[NOTES_IN_SCALE] = {C4, D4, E4, F4, G4, A4, B4, C5, D5, E5, F5, G5}; 
+double C_Minor[NOTES_IN_SCALE] = {C4, D4, Ef4, F4, G4, Af4, Bf4, C5, D5, Ef5, F5, G5}; 
+double C_Sharp_Major[NOTES_IN_SCALE] = {Cs4, Ds4, F4, Fs4, Gs4, As4, C5, Cs5, Ds5, F5, Fs5, Gs5}; 
+double C_Sharp_Minor[NOTES_IN_SCALE] = {Cs4, Ds4, E4, Fs4, Gs4, A4, B5, Cs5, Ds5, E5, Fs5, Gs5}; 
+double D_Major[NOTES_IN_SCALE] = {D4, E4, Fs4, G4, A4, B4, Cs5, D5, E5, Fs5, G5, A5}; 
+double D_Minor[NOTES_IN_SCALE] = {D4, E4, F4, G4, A4, Bf4, C5, D5, E5, F5, G5, A5}; 
+double E_Flat_Major[NOTES_IN_SCALE] = {Ef4, F4, G4, Af4, Bf4, C5, D5, Ef5, F5, G5, Af5, Bf5}; 
+double E_Flat_Minor[NOTES_IN_SCALE] = {Ef4, F4, Gf4, Af4, Bf4, B4, Df5, Ef5, F5, Gf5, Af5, Bf5}; 
+double E_Major[NOTES_IN_SCALE] = {E4, Fs4, Gs4, A4, B4, Cs5, Ds5, E5, Fs5, Gs5, A5, B5}; 
+double E_Minor[NOTES_IN_SCALE] = {E4, Fs4, G4, A4, B4, C5, D5, E5, Fs5, G5, A5, B5}; 
+double F_Major[NOTES_IN_SCALE] = {F4, G4, A4, Bf4, C5, D5, E5, F5, G5, A5, Bf5, C6}; 
+double F_Minor[NOTES_IN_SCALE] = {F4, G4, Af4, Bf4, C5, Df5, Ef5, F5, G5, Af5, Bf5, C6}; 
+double G_Flat_Major[NOTES_IN_SCALE] = {Gf4, Af4, Bf4, B5, Df5, Ef5, F5, Gf5}; 
+double G_Flat_Minor[NOTES_IN_SCALE] = {Gf4, Af4, A4, B5, Df5, D5, E5, Gf5}; 
+double G_Major[NOTES_IN_SCALE] = {G4, A4, B4, C5, D5, E5, Fs5, G5}; 
+double G_Minor[NOTES_IN_SCALE] = {G4, A4, Bf4, C5, D5, Ef5, F5, G5}; 
+double A_Flat_Major[NOTES_IN_SCALE] = {Af4, Bf4, C5, Df5, Ef5, F5, G5, Af5}; 
+double A_Flat_Minor[NOTES_IN_SCALE] = {Af4, Bf4, B5, Df5, Ef5, E5, Gf5, Af5}; 
+double A_Major[NOTES_IN_SCALE] = {A4, B4, Cs5, D5, E5, Fs5, Gs5, A5}; 
+double A_Minor[NOTES_IN_SCALE] = {A4, B4, C5, D5, E5, F5, G5, A5}; 
+double B_Flat_Major[NOTES_IN_SCALE] = {Bf4, C5, D5, Ef5, F5, G5, A5, Bf5};   
+double B_Flat_Minor[NOTES_IN_SCALE] = {Bf4, C5, Df5, Ef5, F5, Gf5, Af5, Bf5};   
+double B_Major[NOTES_IN_SCALE] = {B4, Cs5, Ds5, E5, Fs5, Gs5, As5, B5}; 
+double B_Minor[NOTES_IN_SCALE] = {B4, Cs5, D5, E5, Fs5, G5, A5, B5}; 
 
 /* Chords */
-int i[TRIAD] = {0, 2, 4}; 
-int ii[TRIAD] = {1, 3, 5}; 
-int iii[TRIAD] = {2, 4, 6}; 
-int iv[TRIAD] = {3, 5, 7}; 
-int v[TRIAD] = {4, 6, 8}; 
-int vi[TRIAD] = {5, 7, 9}; 
-int vii[TRIAD] = {6, 8, 10}; 
-int viii[TRIAD] = {7, 9, 11}; 
+double i[TRIAD] = {0, 2, 4}; 
+double ii[TRIAD] = {1, 3, 5}; 
+double iii[TRIAD] = {2, 4, 6}; 
+double iv[TRIAD] = {3, 5, 7}; 
+double v[TRIAD] = {4, 6, 8}; 
+double vi[TRIAD] = {5, 7, 9}; 
+double vii[TRIAD] = {6, 8, 10}; 
+double viii[TRIAD] = {7, 9, 11}; 

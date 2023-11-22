@@ -1,11 +1,10 @@
 CC := clang
 CFLAGS := -g -Wall -Wno-deprecated-declarations -Werror
 
-all: music
+all: audioOutput
 
 clean:
-	rm -f music
+	rm -f audioOutput
 
-music: music.c 
-	$(CC) $(CLAGS) -o music music.c -lSDL2 -lm 
-
+audioOutput: audioOutput.c 
+	$(CC) $(CLAGS) -o audioOutput audioOutput.c -lSDL2 -lm 
