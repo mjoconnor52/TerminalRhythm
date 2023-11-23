@@ -1,11 +1,5 @@
 // This file is for defining notes, scales, triads 
 
-
-
-
-
-
-
 #define NOTES_IN_SCALE 12
 #define TRIAD 3 
 
@@ -175,18 +169,74 @@ double E_Major[NOTES_IN_SCALE] = {E4, Fs4, Gs4, A4, B4, Cs5, Ds5, E5, Fs5, Gs5, 
 double E_Minor[NOTES_IN_SCALE] = {E4, Fs4, G4, A4, B4, C5, D5, E5, Fs5, G5, A5, B5}; 
 double F_Major[NOTES_IN_SCALE] = {F4, G4, A4, Bf4, C5, D5, E5, F5, G5, A5, Bf5, C6}; 
 double F_Minor[NOTES_IN_SCALE] = {F4, G4, Af4, Bf4, C5, Df5, Ef5, F5, G5, Af5, Bf5, C6}; 
-double G_Flat_Major[NOTES_IN_SCALE] = {Gf4, Af4, Bf4, B5, Df5, Ef5, F5, Gf5}; 
-double G_Flat_Minor[NOTES_IN_SCALE] = {Gf4, Af4, A4, B5, Df5, D5, E5, Gf5}; 
-double G_Major[NOTES_IN_SCALE] = {G4, A4, B4, C5, D5, E5, Fs5, G5}; 
-double G_Minor[NOTES_IN_SCALE] = {G4, A4, Bf4, C5, D5, Ef5, F5, G5}; 
-double A_Flat_Major[NOTES_IN_SCALE] = {Af4, Bf4, C5, Df5, Ef5, F5, G5, Af5}; 
-double A_Flat_Minor[NOTES_IN_SCALE] = {Af4, Bf4, B5, Df5, Ef5, E5, Gf5, Af5}; 
-double A_Major[NOTES_IN_SCALE] = {A4, B4, Cs5, D5, E5, Fs5, Gs5, A5}; 
-double A_Minor[NOTES_IN_SCALE] = {A4, B4, C5, D5, E5, F5, G5, A5}; 
-double B_Flat_Major[NOTES_IN_SCALE] = {Bf4, C5, D5, Ef5, F5, G5, A5, Bf5};   
-double B_Flat_Minor[NOTES_IN_SCALE] = {Bf4, C5, Df5, Ef5, F5, Gf5, Af5, Bf5};   
-double B_Major[NOTES_IN_SCALE] = {B4, Cs5, Ds5, E5, Fs5, Gs5, As5, B5}; 
-double B_Minor[NOTES_IN_SCALE] = {B4, Cs5, D5, E5, Fs5, G5, A5, B5}; 
+double G_Flat_Major[NOTES_IN_SCALE] = {Gf4, Af4, Bf4, B5, Df5, Ef5, F5, Gf5, Af5, Bf5, Df6, Ef6}; 
+double G_Flat_Minor[NOTES_IN_SCALE] = {Gf4, Af4, A4, B4, Df5, D5, E5, Gf5, Af5, A5, B5, Df6}; 
+double G_Major[NOTES_IN_SCALE] = {G4, A4, B4, C5, D5, E5, Fs5, G5, A5, B5, C6, D6}; 
+double G_Minor[NOTES_IN_SCALE] = {G4, A4, Bf4, C5, D5, Ef5, F5, G5, A5, Bf5, C6, D6}; 
+double A_Flat_Major[NOTES_IN_SCALE] = {Af4, Bf4, C5, Df5, Ef5, F5, G5, Af5, Bf5, C6, Df6, Ef6}; 
+double A_Flat_Minor[NOTES_IN_SCALE] = {Af4, Bf4, B4, Df5, Ef5, E5, Gf5, Af5, Bf5, B5, Df6, Ef6}; 
+double A_Major[NOTES_IN_SCALE] = {A4, B4, Cs5, D5, E5, Fs5, Gs5, A5, B5, Cs6, D6, E6}; 
+double A_Minor[NOTES_IN_SCALE] = {A4, B4, C5, D5, E5, F5, G5, A5, B5, C6, D6, E6}; 
+double B_Flat_Major[NOTES_IN_SCALE] = {Bf4, C5, D5, Ef5, F5, G5, A5, Bf5, C6, D6, Ef6, F6};   
+double B_Flat_Minor[NOTES_IN_SCALE] = {Bf4, C5, Df5, Ef5, F5, Gf5, Af5, Bf5, C6, Df6, Ef6, F6};   
+double B_Major[NOTES_IN_SCALE] = {B4, Cs5, Ds5, E5, Fs5, Gs5, As5, B5, Cs6, Ds6, E6, Fs6}; 
+double B_Minor[NOTES_IN_SCALE] = {B4, Cs5, D5, E5, Fs5, G5, A5, B5, Cs6, D6, E6, Fs6}; 
+ 
+double allKeys[24][NOTES_IN_SCALE]; 
+
+// Was attempting to use char*'s for a for loop such as: 
+
+// for (int i = 0; i < 24; i++) { 
+//    memcpy(allKeys[i], allKeyNames[i], sizeof(allKeyNames[i])); 
+// }
+
+// char* allKeyNames = {C_Major, C_Minor, C_Sharp_Major, C_Sharp_Minor, D_Major, D_Minor, 
+//                      E_Flat_Major, E_Flat_Minor, E_Major, E_Minor, F_Major, F_Minor, 
+//                      G_Flat_Major, G_Flat_Minor, G_Major, G_Minor, A_Flat_Major, A_Flat_Minor, 
+//                      A_Major, A_Minor, B_Flat_Major, B_Flat_Minor, B_Major, B_Minor}; 
+
+
+// also tried this version but it gave errors 
+
+// memcpy(allKeys[0], C_Major, sizeof(C_Major)); 
+// memcpy(allKeys[1], C_Minor, sizeof(C_Minor)); 
+// memcpy(allKeys[2], C_Sharp_Major, sizeof(C_Sharp_Major)); 
+// memcpy(allKeys[3], C_Sharp_Minor, sizeof(C_Sharp_Minor)); 
+// memcpy(allKeys[4], D_Major, sizeof(D_Major)); 
+// memcpy(allKeys[5], D_Minor, sizeof(D_Minor)); 
+// memcpy(allKeys[6], E_Flat_Major, sizeof(E_Flat_Major)); 
+// memcpy(allKeys[7], E_Flat_Minor, sizeof(E_Flat_Minor)); 
+// memcpy(allKeys[8], E_Major, sizeof(E_Major)); 
+// memcpy(allKeys[9], E_Minor, sizeof(E_Minor)); 
+// memcpy(allKeys[10], F_Major, sizeof(F_Major)); 
+// memcpy(allKeys[11], F_Minor, sizeof(F_Minor));   
+// memcpy(allKeys[12], G_Flat_Major, sizeof(G_Flat_Major)); 
+// memcpy(allKeys[13], G_Flat_Minor, sizeof(G_Flat_Minor)); 
+// memcpy(allKeys[14], G_Major, sizeof(G_Major));   
+// memcpy(allKeys[15], G_Minor, sizeof(G_Minor)); 
+// memcpy(allKeys[16], A_Flat_Major, sizeof(A_Flat_Major)); 
+// memcpy(allKeys[17], A_Flat_Minor, sizeof(A_Flat_Minor));  
+// memcpy(allKeys[18], A_Major, sizeof(A_Major)); 
+// memcpy(allKeys[19], A_Minor, sizeof(A_Minor)); 
+// memcpy(allKeys[20], B_Flat_Major, sizeof(B_Flat_Major)); 
+// memcpy(allKeys[21], B_Flat_Minor, sizeof(B_Flat_Minor)); 
+// memcpy(allKeys[22], B_Major, sizeof(B_Major));  
+// memcpy(allKeys[23], B_Minor, sizeof(B_Minor));  
+
+// double happyKeys[11] = {C_Major, D_Major, E_Major, G_Major, A_Major, 
+//                         C_Sharp_Major, E_Flat_Major, G_Flat_Major, A_Flat_Major,
+//                         B_Flat_Major, B_Major}; 
+
+// double reflectiveKeys[9] = {C_Minor, E_Minor, A_Minor, C_Sharp_Minor, E_Flat_Minor, 
+//                             G_Flat_Minor, A_Flat_Minor, B_Flat_Minor, B_Minor}; 
+
+// double sadKeys[10] = {D_Minor, F_Minor, G_Minor, A_Minor, B_Minor, C_Sharp_Minor, 
+//                       E_Flat_Minor, G_Flat_Minor, A_Flat_Minor, B_Flat_Minor}; 
+
+// double darkKeys[10] = {F_Minor, G_Minor, A_Minor, B_Minor, G_Flat_Major, A_Flat_Major, 
+//                        B_Flat_Major, G_Flat_Minor, A_Flat_Minor, B_Flat_Minor}; 
+
+// double triumphantKeys[3] = {D_Major, B_Major, E_Flat_Major}; 
 
 /* Chords */
 double i[TRIAD] = {0, 2, 4}; 

@@ -1,10 +1,5 @@
 // This file is a demo for outputting audio 
 
-
-
-
-
-
 #include <SDL2/SDL.h>
 #include <math.h>
 
