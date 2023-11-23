@@ -9,6 +9,14 @@
 #define MAX_NUM_FREQUENCIES 12 // Will need to change this based on song length / duration 
 #define MAX_NUM_DURATIONS 12 // Will need to change this based on song length / duration 
 
+// An enum that was created for defining difficulty
+enum Difficulty {
+    Easy = 0, 
+    Normal, 
+    Hard, 
+    Charlie, 
+}; 
+
 // This is where we will add user input 
 void inputs(double frequencies[], double durations[]) { 
 
@@ -130,6 +138,8 @@ int playMusic(double frequencies[], double durations[], size_t numFrequencies, s
     If we have time, we could have difficulty 
     change based on how well a player is doing 
 */
+
+
 
 /* Descriptor: an emotion 
     -> Choose a musical key based on emotion. 
