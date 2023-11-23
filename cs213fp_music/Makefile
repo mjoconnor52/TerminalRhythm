@@ -7,4 +7,5 @@ clean:
 	rm -f audioOutput
 
 audioOutput: audioOutput.c 
-	$(CC) $(CLAGS) -o audioOutput audioOutput.c -lSDL2 -lm
+	rm -f audioOutput
+	$(CC) $(CFLAGS) -o audioOutput audioOutput.c -lSDL2 -lm

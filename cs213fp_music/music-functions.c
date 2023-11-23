@@ -9,6 +9,13 @@
 #define MAX_NUM_FREQUENCIES 12 // Will need to change this based on song length / duration 
 #define MAX_NUM_DURATIONS 12 // Will need to change this based on song length / duration 
 
+
+/* Difficulty options: 
+    Easy, Medium, Hard, Charlie 
+
+    If we have time, we could have difficulty 
+    change based on how well a player is doing 
+*/
 // An enum that was created for defining difficulty
 enum Difficulty {
     Easy = 0, 
@@ -17,11 +24,18 @@ enum Difficulty {
     Charlie, 
 }; 
 
+
+
 // This is where we will add user input 
 void inputs(double frequencies[], double durations[]) { 
 
-    double keySelection[MAX_NUM_FREQUENCIES]; 
+    enum Scale_Mood mood = Happy; 
 
+    //double keySelection[MAX_NUM_FREQUENCIES]; 
+    // Start creating our hashmap
+    populate_hashmap(); 
+    
+    scales_info_t * scale = get_random_hashkey(mood); 
     /*
     if statements here to choose one of these sorted 2d-arrays 
       -> allKeys 
@@ -57,15 +71,46 @@ void inputs(double frequencies[], double durations[]) {
     and make other random exeception rules. 
     */
 
+   double selected_notes[12]; 
+   //Starting at the tonic
+
+   int location = 0; 
+   selected_notes[location] = scale->scale[location];
+
+    // There might be a way to simiplify it but I have no clue rn
+   for (int i = 1; i < 12; i++)
+   {
+
+    // Logic for scale progressions
+    if(location == 0 || location == 8){ // if we start at tonic 
+        location = (((rand() % 3) + 1) * 2); // math to get randomly 2, 4 or 6
+    } else if(location != 8 && location % 2 == 0){ // going to our tonic 1 or our dominant 5 
+        int temp = rand() % 2; 
+        if(temp == 0){ // if its 0, we just go back to the tonic
+            location = temp; 
+        }else{ // else we go to the fifth
+            location = 5; 
+        } 
+    } else if(location == 5){ // we are at the dominant 5
+        int temp = rand() % 3; 
+        if(temp == 0){ //return to tonic 1
+            location = temp; 
+        } else{ // go to 4 or six
+            location = (temp + 1) * 2; 
+        }
+    }
+    selected_notes[i] = scale->scale[location];
+   }
+
     /* 
     Now, using the scale degrees, we can find the corresponding pitches from 
     the keySelection, and populate the frequencies array with these pitches
     */
 
-    // memcpy(frequencies, keySelection, sizeof(keySelection)); 
+    //memcpy(frequencies, keySelection, sizeof(keySelection)); 
 
     // for now, we can use the key C_Major, with 12 pitches in increasing order 
-    memcpy(frequencies, C_Major, sizeof(C_Major)); 
+    memcpy(frequencies, selected_notes, sizeof(double) * 12); 
 
     // This tempDurations will need to be filled with some algorithm which also chooses notes 
     // within the scale 
@@ -132,12 +177,6 @@ int playMusic(double frequencies[], double durations[], size_t numFrequencies, s
     return 0;
 } 
 
-/* Difficulty options: 
-    Easy, Medium, Hard, Charlie 
-
-    If we have time, we could have difficulty 
-    change based on how well a player is doing 
-*/
 
 
 
