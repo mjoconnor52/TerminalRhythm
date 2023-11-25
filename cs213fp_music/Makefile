@@ -4,7 +4,8 @@ CFLAGS := -g -Wall -Wno-deprecated-declarations -Werror
 all: audioOutput
 
 clean:
-	rm -f audioOutput.c
+	rm -f audioOutput
 
 audioOutput: audioOutput.c 
-	$(CC) $(CLAGS) -o audioOutput audioOutput.c -lSDL2 -lm
+	rm -f audioOutput
+	$(CC) $(CFLAGS) -o audioOutput audioOutput.c -lSDL2 -lm
