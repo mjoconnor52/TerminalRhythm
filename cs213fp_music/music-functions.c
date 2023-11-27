@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "notes.c" 
+#include "lottery.c"
 
 #define SAMPLE_RATE 44100
 #define AMPLITUDE 32767
@@ -24,7 +25,23 @@ enum Difficulty {
     Charlie, 
 }; 
 
+typedef struct notes{
+    int frequency; 
+    char keyboard_character; 
+    int duration; 
+} notes_t; 
 
+// The associated keys, chosen completly randomly
+char keyboard_characters[8] = {
+    'A', 
+    'S', 
+    'D', 
+    'F', 
+    'H', 
+    'J', 
+    'K', 
+    'L' 
+}; 
 
 // This is where we will add user input 
 void inputs(double frequencies[], double durations[]) { 
@@ -87,24 +104,7 @@ void inputs(double frequencies[], double durations[]) {
     // There might be a way to simiplify it but I have no clue rn
    for (int i = 1; i < 12; i++)
    {
-    // Logic for scale progressions
-    if(location == 0 || location == 8){ // if we start at tonic 
-        location = (((rand() % 3) + 1) * 2); // math to get randomly 2, 4 or 6
-    } else if(location != 8 && location % 2 == 0){ // going to our tonic 1 or our dominant 5 
-        int temp = rand() % 2; 
-        if(temp == 0){ // if its 0, we just go back to the tonic
-            location = temp; 
-        }else{ // else we go to the fifth
-            location = 5; 
-        } 
-    } else if(location == 5){ // we are at the dominant 5
-        int temp = rand() % 3; 
-        if(temp == 0){ //return to tonic 1
-            location = temp; 
-        } else{ // go to 4 or six
-            location = (temp + 1) * 2; 
-        }
-    }
+    location = return_winner(location); 
     selected_notes[i] = scale->scale[location];
     //selected_notes[i] = selected_scale[location]; 
    }
