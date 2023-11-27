@@ -29,13 +29,6 @@ enum Difficulty {
 // This is where we will add user input 
 void inputs(double frequencies[], double durations[]) { 
 
-    enum Scale_Mood mood = Happy; 
-
-    //double keySelection[MAX_NUM_FREQUENCIES]; 
-    // Start creating our hashmap
-    populate_hashmap(); 
-    
-    scales_info_t * scale = get_random_hashkey(mood); 
     /*
     if statements here to choose one of these sorted 2d-arrays 
       -> allKeys 
@@ -75,12 +68,25 @@ void inputs(double frequencies[], double durations[]) {
    //Starting at the tonic
 
    int location = 0; 
+
+    // This will probably be some sort of selected enum.
+    enum Scale_Mood mood = Happy; 
+
+    // HASHMAP OPTION
+    // Start creating our hashmap
+    populate_hashmap(); 
+    
+    scales_info_t * scale = get_random_hashkey(mood); 
+   
+   // ARRAY OPTION WIP (WORK IN PROGRESS)
+   // double * selected_scale = get_random_scale(mood); 
+
+   // selected_notes[location] = selected_scale[0]; 
    selected_notes[location] = scale->scale[location];
 
     // There might be a way to simiplify it but I have no clue rn
    for (int i = 1; i < 12; i++)
    {
-
     // Logic for scale progressions
     if(location == 0 || location == 8){ // if we start at tonic 
         location = (((rand() % 3) + 1) * 2); // math to get randomly 2, 4 or 6
@@ -100,6 +106,7 @@ void inputs(double frequencies[], double durations[]) {
         }
     }
     selected_notes[i] = scale->scale[location];
+    //selected_notes[i] = selected_scale[location]; 
    }
 
     /* 
@@ -158,6 +165,7 @@ int playMusic(double frequencies[], double durations[], size_t numFrequencies, s
 
     SDL_PauseAudioDevice(audioDevice, 0);
 
+    // In order to make the notes play somewhat unified, we will want to make the buffer bigger
     for (size_t i = 0; i < numFrequencies; ++i) {
         Uint32 length = (Uint32)(SAMPLE_RATE * durations[i]);
         Uint8 *buffer = (Uint8 *)malloc(length * 2);  // 2 bytes per sample for AUDIO_S16SYS

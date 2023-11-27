@@ -244,7 +244,34 @@ double* darkKeys[10] = {F_Minor, G_Minor, A_Minor, B_Minor, G_Flat_Major, A_Flat
 double* triumphantKeys[3] = {D_Major, B_Major, E_Flat_Major};
 
 
-// I think the hashamp will be preferable, but the array implementation straight up won't be terrible either
+// I think the hashamp will be preferable if we want to continue with the struct, 
+// but the array implementation straight up won't be terrible either
+double* get_random_scale(enum Scale_Mood mood){
+   double * scale = malloc(sizeof(double) * NOTES_IN_SCALE); 
+   switch (mood)
+   {
+   case Happy:
+      memcpy(scale, happyKeys[rand() % 11], NOTES_IN_SCALE); 
+      break;
+   case Sad: 
+      memcpy(scale, sadKeys[rand() % 10], NOTES_IN_SCALE); 
+      break;
+   case Dark: 
+      memcpy(scale, darkKeys[rand() % 10], NOTES_IN_SCALE); 
+      break;   
+   case Triumphant: 
+      memcpy(scale, triumphantKeys[rand() % 3], NOTES_IN_SCALE); 
+      break;
+   case Reflective: 
+      memcpy(scale, triumphantKeys[rand() % 9], NOTES_IN_SCALE); 
+      break;    
+   default:
+      memcpy(scale, happyKeys[rand() % 11], NOTES_IN_SCALE); 
+      break;
+   }
+   return scale; 
+}
+
 
 
 // Initializing the hashmap and random selection
@@ -399,9 +426,11 @@ void populate_hashmap(){
    scales_info_t * test_scale = malloc(sizeof(scales_info_t)); 
    test_scale->scale = C_Major; 
    test_scale->rel = A_Minor; 
+
    scales_info_t * test_scale2 = malloc(sizeof(scales_info_t)); 
    test_scale2->scale = D_Major; 
    test_scale2->rel = B_Minor; 
+
    add_hashnode(Happy, test_scale); 
    add_hashnode(Happy, test_scale2); 
 
