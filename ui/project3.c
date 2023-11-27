@@ -8,9 +8,9 @@
 
 #define WIDTH 50
 #define HEIGHT 20
-#define DROP_INTERVAL 100000  // Microseconds
+#define DROP_INTERVAL 500000  // Microseconds
 #define HIT_MARGIN 1          // Second
-#define NUM_NOTES 6
+#define NUM_NOTES 8
 
 typedef struct {
     char letter;
@@ -23,9 +23,11 @@ Note notes[NUM_NOTES];
 int score = 0;
 pthread_mutex_t mutex;
 
+char notes_letters[8] = {'A','S','D', 'F', 'H', 'J','K','L'};
+
 void init_notes() {
     for (int i = 0; i < NUM_NOTES; i++) {
-        notes[i].letter = 'A' + i;
+        notes[i].letter = notes_letters[i];
         notes[i].x = i * (WIDTH / NUM_NOTES) + (WIDTH / NUM_NOTES - 1) / 2;
         notes[i].y = 0;
         notes[i].active = false;
@@ -46,7 +48,7 @@ void move_notes() {
     for (int i = 0; i < NUM_NOTES; i++) {
         if (notes[i].active) {
             notes[i].y++;
-            if (notes[i].y > HEIGHT) {
+            if (notes[i].y > HEIGHT-1) {
                 notes[i].active = false;
             }
         }
@@ -56,14 +58,15 @@ void move_notes() {
 void draw() {
     clear();
     for (int i = 0; i < NUM_NOTES; i++) {
-        mvaddch(0, notes[i].x, 'A' + i);
+        mvaddch(0, notes[i].x, notes_letters[i]);
     }
     for (int i = 0; i < NUM_NOTES; i++) {
         if (notes[i].active) {
             mvaddch(notes[i].y, notes[i].x, notes[i].letter);
         }
     }
-    mvhline(HEIGHT - 1, 0, '-', WIDTH);
+    mvhline(HEIGHT - 2, 0, '-', WIDTH);
+    mvhline(HEIGHT - 6, 0, '-', WIDTH);
     mvprintw(HEIGHT, 0, "Score: %d", score);
     refresh();
 }
@@ -110,7 +113,13 @@ void check_input() {
         for (int i = 0; i < NUM_NOTES; i++) {  // Loop through the notes
             if (notes[i].active && ch == notes[i].letter) {  // If the note is active and the key matches
                 // Check if the note is within the bottom line HIT_MARGIN
-                if (abs(HEIGHT - 1 - notes[i].y) <= HIT_MARGIN) {  
+                if ((HEIGHT - 2 - notes[i].y) > HIT_MARGIN && (notes[i].y - HEIGHT +6) > HIT_MARGIN) {  
+                    score = score+2;  // Increase score
+                    notes[i].active = false;  // Deactivate the note
+                } else if(abs(HEIGHT - 2 - notes[i].y) >= HIT_MARGIN) {
+                    score++;  // Increase score
+                    notes[i].active = false;  // Deactivate the note
+                }else if(abs(HEIGHT - 6 - notes[i].y) <= HIT_MARGIN) {
                     score++;  // Increase score
                     notes[i].active = false;  // Deactivate the note
                 }
@@ -139,7 +148,7 @@ int main() {
         draw();
         check_input();
 
-        if (score >= 10) {  // End game condition
+        if (score >= 100) {  // End game condition
             break;
         }
 
