@@ -32,7 +32,7 @@ typedef struct notes{
 } notes_t; 
 
 // The associated keys, chosen completly randomly
-char keyboard_characters[8] = {
+char keyboard_characters[NOTES_IN_SCALE] = {
     'A', 
     'S', 
     'D', 
@@ -81,13 +81,13 @@ void inputs(double frequencies[], double durations[]) {
     and make other random exeception rules. 
     */
 
-   double selected_notes[12]; 
+   double selected_notes[MAX_NUM_FREQUENCIES]; 
    //Starting at the tonic
 
    int location = 0; 
 
     // This will probably be some sort of selected enum.
-    enum Scale_Mood mood = Happy; 
+    enum Scale_Mood mood = All; 
 
     // HASHMAP OPTION
     // Start creating our hashmap
@@ -95,17 +95,23 @@ void inputs(double frequencies[], double durations[]) {
     
     scales_info_t * scale = get_random_hashkey(mood); 
    
-   // ARRAY OPTION WIP (WORK IN PROGRESS)
-   // double * selected_scale = get_random_scale(mood); 
-
-   // selected_notes[location] = selected_scale[0]; 
    selected_notes[location] = scale->scale[location];
 
-    // There might be a way to simiplify it but I have no clue rn
-   for (int i = 1; i < 12; i++)
+   printf("%lf", scale->scale[0]); 
+
+   for (int i = 1; i < MAX_NUM_FREQUENCIES; i++)
    {
     location = return_winner(location); 
     selected_notes[i] = scale->scale[location];
+
+    //Testing for different scales
+    // if(i == 6)
+    //     scale = get_random_hashkey(mood);
+
+    // if(i == 3 || i == 9)
+    //     scale = scale->rel; 
+
+
     //selected_notes[i] = selected_scale[location]; 
    }
 
@@ -121,6 +127,9 @@ void inputs(double frequencies[], double durations[]) {
 
     // This tempDurations will need to be filled with some algorithm which also chooses notes 
     // within the scale 
+
+    // Whole times
+    //int offset = 0; 
     double tempDurations[] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0}; 
 
     memcpy(durations, tempDurations, sizeof(tempDurations)); 

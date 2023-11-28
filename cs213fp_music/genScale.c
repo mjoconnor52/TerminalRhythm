@@ -10,68 +10,83 @@
 #define NOTES_IN_SCALE 12
 #define TUNING_FREQ 440
 
+typedef struct scales_info{
+   double* scale; 
+   double* rel; 
+} scales_info_t; 
+
 // double generate_next_frequency(int note){
 //    // the bitshift will make the 2^n value,
-//    return TUNING_FREQ * pow(2, (note * (1 / (double) TUNING_FREQ) * (1 / (double)NOTES_IN_SCALE))); 
+//    return TUNING_FREQ * pow(2, (note * (1 / (double) TUNING_FREQ) * (1 / (double)NOTES_IN_SCALE)));
 // }
 
-double generate_next_frequency(int note){
+double generate_next_frequency(int note)
+{
    // the bitshift will make the 2^n value,
-   return TUNING_FREQ * pow(2, (note  * (1 / (double)NOTES_IN_SCALE))); 
+   return TUNING_FREQ *  pow(2, (note * (1 / (double) NOTES_IN_SCALE)));
 }
 
-double * generate_scale(double startingPitch, double * scaleType) {
+// T
+int distance_to_A(double frequency){
+   return round(NOTES_IN_SCALE * log2(frequency / (double) TUNING_FREQ));
+}
 
-   double * scale = malloc(sizeof(double)*NOTES_IN_SCALE); 
+double* generate_scale(double startingPitch, double *scaleType)
+{
+   double * scale = malloc(sizeof(double) * NOTES_IN_SCALE);
+   int start = 0; // where the equation will go after the pitch
+   scale[0] = startingPitch; // This 0 is the index of the array
 
-   scale[0] = startingPitch; 
-   int start = 0; 
+   start = distance_to_A(startingPitch);
+   printf("\nStart: %d\n", start); 
+   
+   start = 0; 
 
-   if(startingPitch >= TUNING_FREQ){
-   while(round(generate_next_frequency(start)) != startingPitch){
-    start++; 
-   }
-   } else {
-       while(round(generate_next_frequency(start)) != startingPitch){
-    start--; 
-   }
-   }
-
-
-   for (int i = 1; i < NOTES_IN_SCALE; i++) {
-        printf("Current Loop: %d\n", i); 
-        //printf("scaleType[i-1]: %f\n", scaleType[i-1]); 
-
-      if(scaleType[i-1] == HALF) { 
-        printf("Half: %d\n", i);  
-        start++; 
-        scale[i] = generate_next_frequency(start);  
-      } else if (scaleType[i-1] == WHOLE) { 
-        start += 2;  
-        scale[i] = generate_next_frequency(start); 
+   /// modifies freq to find freq in equation w/o saving
+   if (startingPitch >= TUNING_FREQ){
+      while (round(generate_next_frequency(start)) != startingPitch){
+         start++;
       }
+   }
+   else {
+      while (round(generate_next_frequency(start)) != startingPitch){
+         start--;
+      }
+   }
 
+   printf("\nStart: %d\n", start); 
+
+   // Increment each note in the scale
+   for (int i = 1; i < NOTES_IN_SCALE; i++)
+   {
+      if (scaleType[i - 1] == HALF){
+         start++;
+         scale[i] = generate_next_frequency(start);
+      }
+      else if (scaleType[i - 1] == WHOLE){
+         start += 2;
+         scale[i] = generate_next_frequency(start);
+
+      }
    }
 
    return scale; 
+}
 
-} 
+int main()
+{
 
-int main() { 
+   int A5 = 392;
 
-   int A5 = 294;
+   double MajorScaleSteps[NOTES_IN_SCALE] = {WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE};
+   double MinorScaleSteps[NOTES_IN_SCALE] = {WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF, WHOLE, WHOLE};
 
-   double MajorScaleSteps[NOTES_IN_SCALE] = {WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE}; 
-   double MinorScaleSteps[NOTES_IN_SCALE] = {WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF, WHOLE, WHOLE}; 
+   scales_info_t *storedScale = malloc(sizeof(scales_info_t));
 
-   double * storedScale; 
+   storedScale->scale = generate_scale(A5, MajorScaleSteps);
 
-   storedScale = generate_scale(A5, MajorScaleSteps); 
-
-   for (int i = 0; i < NOTES_IN_SCALE; i++){
-      printf("%f\n", storedScale[i]); 
+   for (int i = 0; i < NOTES_IN_SCALE; i++)
+   {
+      printf("%f\n", storedScale->scale[i]);
    }
-
-   printf("NEXT FREQ: %f\n", generate_next_frequency(0)); 
-
 }
