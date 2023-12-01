@@ -2,34 +2,12 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "notes.c" 
-#include "lottery.c"
+#include "music-functions.h"
 
 #define SAMPLE_RATE 44100
 #define AMPLITUDE 32767
 #define MAX_NUM_FREQUENCIES 12 // Will need to change this based on song length / duration 
 #define MAX_NUM_DURATIONS 12 // Will need to change this based on song length / duration 
-
-
-/* Difficulty options: 
-    Easy, Medium, Hard, Charlie 
-
-    If we have time, we could have difficulty 
-    change based on how well a player is doing 
-*/
-// An enum that was created for defining difficulty
-enum Difficulty {
-    Easy = 0, 
-    Normal, 
-    Hard, 
-    Charlie, 
-}; 
-
-typedef struct notes{
-    int frequency; 
-    char keyboard_character; 
-    int duration; 
-} notes_t; 
 
 // The associated keys, chosen completly randomly
 char keyboard_characters[NOTES_IN_SCALE] = {
@@ -82,6 +60,7 @@ void inputs(double frequencies[], double durations[]) {
     */
 
    double selected_notes[MAX_NUM_FREQUENCIES]; 
+   double selected_durations[MAX_NUM_DURATIONS]; 
    //Starting at the tonic
 
    int location = 0; 
@@ -97,7 +76,7 @@ void inputs(double frequencies[], double durations[]) {
    
    selected_notes[location] = scale->scale[location];
 
-   printf("%lf", scale->scale[0]); 
+   // printf("%lf", scale->scale[0]); 
 
    for (int i = 1; i < MAX_NUM_FREQUENCIES; i++)
    {
@@ -113,6 +92,7 @@ void inputs(double frequencies[], double durations[]) {
 
 
     //selected_notes[i] = selected_scale[location]; 
+    selected_durations[i] = return_winner_dur(location); 
    }
 
     /* 
@@ -123,16 +103,16 @@ void inputs(double frequencies[], double durations[]) {
     //memcpy(frequencies, keySelection, sizeof(keySelection)); 
 
     // for now, we can use the key C_Major, with 12 pitches in increasing order 
-    memcpy(frequencies, selected_notes, sizeof(double) * 12); 
+    memcpy(frequencies, selected_notes, sizeof(double) * MAX_NUM_FREQUENCIES); 
 
     // This tempDurations will need to be filled with some algorithm which also chooses notes 
     // within the scale 
 
     // Whole times
     //int offset = 0; 
-    double tempDurations[] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0}; 
+    //double tempDurations[] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0}; 
 
-    memcpy(durations, tempDurations, sizeof(tempDurations)); 
+    memcpy(durations, selected_durations, sizeof(double) * MAX_NUM_DURATIONS); 
 
 } 
 

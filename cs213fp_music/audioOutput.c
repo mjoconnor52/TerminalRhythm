@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#include "music-functions.c"
+#include "music-functions.h"
 
 int main() { 
 
@@ -16,6 +16,9 @@ int main() {
 
     // using arrays to create output 
     playMusic(frequencies, durations, MAX_NUM_FREQUENCIES, MAX_NUM_DURATIONS); 
+    
+    // Any other artifacts we make, we will want to clean up
+    //destroy_hashmap(); 
 
     return 0; 
 }

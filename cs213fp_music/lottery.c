@@ -1,18 +1,19 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "lottery.h"
 
-#define SCALE_SIZE 8
+double possible_durs[DUR_TYPES] = {1, .25, .5, 2, 4}; 
 
 // The range of acceptable values in the struct
 int possible_values[8][8] = {
     {0, 1, 2, 3, 4, 5, 6, 7}, 
-    {1, 4, 5, 6, 1, 4, 5, 6,},
+    {0, 3, 4, 5, 0, 3, 4, 5},
     {0, 1, 2, 3, 4, 5, 6, 7}, 
-    {1, 2, 5, 6, 1, 2, 5, 6,}, 
-    {1, 2, 4, 6, 1, 2, 4, 6,}, 
-    {1, 2, 4, 5, 1, 2, 4, 5}, 
-    {1, 1, 1, 1, 1, 1, 1, 1}
+    {0, 1, 4, 5, 0, 1, 4, 5}, 
+    {0, 1, 3, 5, 0, 1, 3, 5}, 
+    {0, 1, 3, 4, 0, 1, 3, 4}, 
+    {0, 0, 0, 0, 0, 0, 0, 0}
 
 }; 
 
@@ -24,12 +25,7 @@ int return_winner(int location){
     return possible_values[location][selected]; 
 }
 
-/*
-1: ALL 8
-2: 1, 4, 5, 6
-3: ALL 8
-4: 1, 2, 5, 6
-5: 1, 2, 4, 6
-6: 1, 2, 4, 5
-7: 1
-*/
+
+double return_winner_dur(int location){
+    return possible_durs[(rand() % DUR_TYPES)];    
+}
