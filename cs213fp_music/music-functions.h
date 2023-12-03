@@ -35,10 +35,12 @@ typedef struct notes{
     int duration; 
 } notes_t; 
 
-void inputs(double frequencies[], double durations[]); 
+void inputs(double frequencies[], char letters[], double durations[]); 
 
 void generateSineWave(Uint8 *buffer, double frequency, double duration); 
 
 int playMusic(double frequencies[], double durations[], size_t numFrequencies, size_t numDurations); 
+
+void cleanup_mem(); 
 
 #endif
