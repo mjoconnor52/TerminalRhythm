@@ -11,6 +11,7 @@
 #define DROP_INTERVAL 500000  // Microseconds
 #define HIT_MARGIN 1          // Second
 #define NUM_NOTES 8
+#define MAX_SCORES 1000
 
 typedef struct {
     char letter;
@@ -57,6 +58,8 @@ void move_notes() {
 
 void draw() {
     clear();
+    mvhline(HEIGHT - 2, 0, '-', WIDTH);
+    mvhline(HEIGHT - 6, 0, '-', WIDTH);
     for (int i = 0; i < NUM_NOTES; i++) {
         mvaddch(0, notes[i].x, notes_letters[i]);
     }
@@ -65,8 +68,7 @@ void draw() {
             mvaddch(notes[i].y, notes[i].x, notes[i].letter);
         }
     }
-    mvhline(HEIGHT - 2, 0, '-', WIDTH);
-    mvhline(HEIGHT - 6, 0, '-', WIDTH);
+    
     mvprintw(HEIGHT, 0, "Score: %d", score);
     refresh();
 }
@@ -82,6 +84,49 @@ void *note_movement(void *args) {
     return NULL;
 }
 
+void record_score(int finalScore) {
+    FILE *file = fopen("scores.txt", "a"); // Open scores.txt in append mode
+    if (file == NULL) {
+        perror("Error opening file");
+        return;
+    }
+    fprintf(file, "Score: %d\n", finalScore); // Write the score to the file
+    fclose(file); // Close the file
+}
+
+int read_scores(int scores[], int max_scores) {
+    FILE *file = fopen("scores.txt", "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        return 0;
+    }
+
+    int score, count = 0;
+    while (count < max_scores && fscanf(file, "Score: %d\n", &score) == 1) {
+        scores[count++] = score;
+    }
+
+    fclose(file);
+    return count; // Return the number of scores read
+}
+void sort_scores(int scores[], int count) {
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (scores[j] < scores[j + 1]) {
+                int temp = scores[j];
+                scores[j] = scores[j + 1];
+                scores[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void print_top_scores(int scores[], int count) {
+    printf("Top Scores:\n");
+    for (int i = 0; i < count && i < 5; i++) {
+        printf("%d. %d\n", i + 1, scores[i]);
+    }
+}
 // void check_input() {
 //     int ch = getch();
 //     if (ch != ERR) {
@@ -116,7 +161,7 @@ void check_input() {
                 if ((HEIGHT - 2 - notes[i].y) > HIT_MARGIN && (notes[i].y - HEIGHT +6) > HIT_MARGIN) {  
                     score = score+2;  // Increase score
                     notes[i].active = false;  // Deactivate the note
-                } else if(abs(HEIGHT - 2 - notes[i].y) >= HIT_MARGIN) {
+                } else if(abs(HEIGHT - 2 - notes[i].y) <= HIT_MARGIN) {
                     score++;  // Increase score
                     notes[i].active = false;  // Deactivate the note
                 }else if(abs(HEIGHT - 6 - notes[i].y) <= HIT_MARGIN) {
@@ -148,12 +193,17 @@ int main() {
         draw();
         check_input();
 
-        if (score >= 100) {  // End game condition
+        if (score >= 10) {  // End game condition
+            record_score(score);
             break;
         }
 
         usleep(50000); // Refresh rate
     }
+
+    
+
+
 
     pthread_mutex_lock(&mutex);
     pthread_cancel(movement_thread);
@@ -167,5 +217,9 @@ int main() {
     getch();
 
     endwin();
+    int scores[MAX_SCORES];
+    int count = read_scores(scores, MAX_SCORES);
+    sort_scores(scores, count);
+    print_top_scores(scores, count);
     return 0;
 }
