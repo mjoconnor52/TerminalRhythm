@@ -18,10 +18,12 @@ typedef struct {
     int x, y;
     bool active;
     time_t dropTime;
+    int combo;
 } Note;
 
 Note notes[NUM_NOTES];
 int score = 0;
+int combo = 0;
 pthread_mutex_t mutex;
 
 char notes_letters[8] = {'A','S','D', 'F', 'H', 'J','K','L'};
@@ -69,7 +71,8 @@ void draw() {
         }
     }
     
-    mvprintw(HEIGHT, 0, "Score: %d", score);
+    mvprintw(HEIGHT-1, 0, "Score: %d", score);
+    mvprintw(HEIGHT, 0, "Combo: %d", combo);
     refresh();
 }
 
@@ -158,15 +161,70 @@ void check_input() {
         for (int i = 0; i < NUM_NOTES; i++) {  // Loop through the notes
             if (notes[i].active && ch == notes[i].letter) {  // If the note is active and the key matches
                 // Check if the note is within the bottom line HIT_MARGIN
-                if ((HEIGHT - 2 - notes[i].y) > HIT_MARGIN && (notes[i].y - HEIGHT +6) > HIT_MARGIN) {  
-                    score = score+2;  // Increase score
+                  if ((HEIGHT - 2 - notes[i].y) > HIT_MARGIN && (notes[i].y - HEIGHT +6) > HIT_MARGIN) {  
+                    combo++;
+                    if(combo >= 10){
+                        score = score+100*1.5;
+                        notes[i].active = false;
+                    }else if(combo >= 20){
+                        score = score+100*2;
+                        notes[i].active = false;
+                    }
+                    else if (combo<10){
+                    score = score+100;  // Increase score
                     notes[i].active = false;  // Deactivate the note
-                } else if(abs(HEIGHT - 2 - notes[i].y) <= HIT_MARGIN) {
-                    score++;  // Increase score
+                    }
+                    
+                    
+                    
+                } else if((HEIGHT - 2 - notes[i].y) == 0) {
+                    combo = 0;
+                    score = score+10;  // Increase score
                     notes[i].active = false;  // Deactivate the note
-                }else if(abs(HEIGHT - 6 - notes[i].y) <= HIT_MARGIN) {
-                    score++;  // Increase score
+                }else if((HEIGHT - 6 - notes[i].y) == 0) {
+                    combo = 0;
+                    score = score+10;  // Increase score
                     notes[i].active = false;  // Deactivate the note
+
+                }else if((HEIGHT - 6 - notes[i].y) < 0 && abs(HEIGHT - 6 - notes[i].y) <=HIT_MARGIN) {
+                    
+                    combo++;
+                    if(combo >= 10){
+                        score = score+50*1.5;
+                        notes[i].active = false;
+                    }else if(combo >= 20){
+                        score = score+50*2;
+                        notes[i].active = false;
+                    }
+                    else if (combo<10){
+                    score = score+50;  // Increase score
+                    notes[i].active = false;  // Deactivate the note
+                    }
+                }else if((HEIGHT - 2 - notes[i].y) > 0 && abs(HEIGHT - 2 - notes[i].y) <=HIT_MARGIN) {
+                   
+                    combo++;
+                    if(combo >= 10){
+                        score = score+50*1.5;
+                        notes[i].active = false;
+                    }else if(combo >= 20){
+                        score = score+50*2;
+                        notes[i].active = false;
+                    }
+                    else if (combo<10){
+                    score = score+50;  // Increase score
+                    notes[i].active = false;  // Deactivate the note
+                    }
+                    
+                }else if((HEIGHT - 6 - notes[i].y) > 0 && abs(HEIGHT - 6 - notes[i].y) <=HIT_MARGIN) {
+                    score = score+10;  // Increase score
+                    notes[i].active = false;  // Deactivate the note
+                    combo = 0;
+                    
+                }else if((HEIGHT - 2 - notes[i].y) < 0 && abs(HEIGHT - 2 - notes[i].y) <=HIT_MARGIN) {
+                    score = score+10;  // Increase score
+                    notes[i].active = false;  // Deactivate the note
+                    combo = 0;
+                    
                 }
             }
         }
@@ -193,8 +251,9 @@ int main() {
         draw();
         check_input();
 
-        if (score >= 10) {  // End game condition
+        if (score >= 2000) {  // End game condition
             record_score(score);
+            draw();
             break;
         }
 
