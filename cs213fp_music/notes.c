@@ -131,13 +131,18 @@ void destroy_hashmap()
       hashmap_node_t *temp = current;
       //free all scales inside of temp_scales
       for(int i = 0; i< MAX_SCALES_IN_MOOD; i++){
+         // creating the 
          scales_info_t * temp_scales =  temp->scales[i]; 
-         destory_scales_info(temp_scales); 
+         if(temp->scales[i] != NULL){
+            destory_scales_info(temp_scales); 
+         } else{
+            free(temp_scales);
+            break; 
+         }
       }
 
       // Otherwise keep iterating through
       current = current->next;
-      free(temp->scales); 
       free(temp);
    }
    free(mood_notes);

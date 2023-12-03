@@ -22,7 +22,7 @@ char keyboard_characters[NOTES_IN_SCALE] = {
 }; 
 
 // This is where we will add user input 
-void inputs(double frequencies[], double durations[]) { 
+void inputs(double frequencies[], char letters[], double durations[]) { 
 
     /*
     if statements here to choose one of these sorted 2d-arrays 
@@ -61,6 +61,7 @@ void inputs(double frequencies[], double durations[]) {
 
    double selected_notes[MAX_NUM_FREQUENCIES]; 
    double selected_durations[MAX_NUM_DURATIONS]; 
+   char selected_letters[MAX_NUM_FREQUENCIES]; 
    //Starting at the tonic
 
    int location = 0; 
@@ -72,9 +73,12 @@ void inputs(double frequencies[], double durations[]) {
     // Start creating our hashmap
     populate_hashmap(); 
     
-    scales_info_t * scale = get_random_hashkey(mood); 
-   
+    scales_info_t * scale = get_random_hashkey(mood);
+
+   // Initalize the duration, tonic and letter
    selected_notes[location] = scale->scale[location];
+   selected_durations[location] = return_winner_dur(location); 
+   selected_letters[location] = keyboard_characters[location]; 
 
    // printf("%lf", scale->scale[0]); 
 
@@ -82,16 +86,7 @@ void inputs(double frequencies[], double durations[]) {
    {
     location = return_winner(location); 
     selected_notes[i] = scale->scale[location];
-
-    //Testing for different scales
-    // if(i == 6)
-    //     scale = get_random_hashkey(mood);
-
-    // if(i == 3 || i == 9)
-    //     scale = scale->rel; 
-
-
-    //selected_notes[i] = selected_scale[location]; 
+    selected_letters[i] = keyboard_characters[location]; 
     selected_durations[i] = return_winner_dur(location); 
    }
 
@@ -100,7 +95,6 @@ void inputs(double frequencies[], double durations[]) {
     the keySelection, and populate the frequencies array with these pitches
     */
 
-    //memcpy(frequencies, keySelection, sizeof(keySelection)); 
 
     // for now, we can use the key C_Major, with 12 pitches in increasing order 
     memcpy(frequencies, selected_notes, sizeof(double) * MAX_NUM_FREQUENCIES); 
@@ -108,9 +102,9 @@ void inputs(double frequencies[], double durations[]) {
     // This tempDurations will need to be filled with some algorithm which also chooses notes 
     // within the scale 
 
+    memcpy(letters, selected_letters, sizeof(char) * MAX_NUM_FREQUENCIES); 
     // Whole times
     //int offset = 0; 
-    //double tempDurations[] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0}; 
 
     memcpy(durations, selected_durations, sizeof(double) * MAX_NUM_DURATIONS); 
 
@@ -174,7 +168,9 @@ int playMusic(double frequencies[], double durations[], size_t numFrequencies, s
     return 0;
 } 
 
-
+void cleanup_mem(){
+    destroy_hashmap(); 
+}
 
 
 /* Descriptor: an emotion 
