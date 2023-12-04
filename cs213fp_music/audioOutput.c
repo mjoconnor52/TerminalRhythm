@@ -19,6 +19,10 @@ int main() {
     //     printf("Keyboard Characters: %c\n", letters[i]); 
     // }
 
+    for (int i = 0; i < 10; i++) { 
+        printf("Frequency %d: %f Duration: %f\n", i+1, frequencies[i], durations[i]); 
+    }
+
     // using arrays to create output 
     playMusic(frequencies, durations, MAX_NUM_FREQUENCIES, MAX_NUM_DURATIONS); 
     

@@ -40,7 +40,7 @@ void hashmap_init()
 void add_hashnode(enum Scale_Mood mood, scales_info_t * scale)
 {
 
-   int sixth = 6; 
+   int sixth = 5; 
 
    // If mood_notes is null, we skip this entirely
 
@@ -53,6 +53,7 @@ void add_hashnode(enum Scale_Mood mood, scales_info_t * scale)
       // if we are able to find the item, we will add it to the values of our hashmap and we are done
       if (current->mood == mood)
       {
+         // To Do: Change to loop 
          // I want to avoid possible repeats in the code, I chose the sixth but idk if that's the best
          if(scale->scale[sixth] == current->scales[current->index]->scale[sixth ])
             return; 

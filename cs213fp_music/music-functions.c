@@ -6,8 +6,9 @@
 
 #define SAMPLE_RATE 44100
 #define AMPLITUDE 32767
-#define MAX_NUM_FREQUENCIES 12 // Will need to change this based on song length / duration 
-#define MAX_NUM_DURATIONS 12 // Will need to change this based on song length / duration 
+#define MAX_NUM_FREQUENCIES 150 // Will need to change this based on song length / duration 
+#define MAX_NUM_DURATIONS 150 // Will need to change this based on song length / duration 
+#define MAX_DURATION 5
 
 // The associated keys, chosen completly randomly
 char keyboard_characters[NOTES_IN_SCALE] = {
@@ -80,24 +81,31 @@ void inputs(double frequencies[], char letters[], double durations[]) {
    selected_durations[location] = return_winner_dur(location); 
    selected_letters[location] = keyboard_characters[location]; 
 
-   // printf("%lf", scale->scale[0]); 
+   printf("Scale Deg 1: %lf\n", scale->scale[0]); 
 
-   for (int i = 1; i < MAX_NUM_FREQUENCIES; i++)
-   {
-    location = return_winner(location); 
-    selected_notes[i] = scale->scale[location];
-    selected_letters[i] = keyboard_characters[location]; 
-    selected_durations[i] = return_winner_dur(location); 
-   }
+   int genCount = 0; 
+   double totalDuration = 0; 
+   while (totalDuration < MAX_DURATION && genCount < MAX_NUM_FREQUENCIES) {
+        location = return_winner(location); 
+        selected_notes[genCount] = scale->scale[location];
+        selected_letters[genCount] = keyboard_characters[location]; 
+        selected_durations[genCount] = return_winner_dur(location); 
+        totalDuration += selected_durations[genCount];
+        genCount++; 
+   } 
 
-    /* 
-    Now, using the scale degrees, we can find the corresponding pitches from 
-    the keySelection, and populate the frequencies array with these pitches
-    */
+   printf("genCount: %d totalDuration: %lf\n", genCount, totalDuration); 
+
+   /* 
+   Now, using the scale degrees, we can find the corresponding pitches from 
+   the keySelection, and populate the frequencies array with these pitches
+   */
 
 
     // for now, we can use the key C_Major, with 12 pitches in increasing order 
     memcpy(frequencies, selected_notes, sizeof(double) * MAX_NUM_FREQUENCIES); 
+
+    //frequencies = realloc(frequencies, sizeof(double) * genCount); 
 
     // This tempDurations will need to be filled with some algorithm which also chooses notes 
     // within the scale 
@@ -106,14 +114,18 @@ void inputs(double frequencies[], char letters[], double durations[]) {
     // Whole times
     //int offset = 0; 
 
+    //letters = realloc(letters, sizeof(char) * genCount); 
+
     memcpy(durations, selected_durations, sizeof(double) * MAX_NUM_DURATIONS); 
+
+    //durations = realloc(durations, sizeof(double) * genCount); 
 
 } 
 
 // This function is done 
 void generateSineWave(Uint8 *buffer, double frequency, double duration) {
     Uint32 length = (Uint32)(SAMPLE_RATE * duration);
-    double timeStep = 1.0 / SAMPLE_RATE;
+    double timeStep = 1.0 / SAMPLE_RATE; 
 
     for (Uint32 i = 0; i < length; ++i) {
         double t = i * timeStep;
@@ -148,8 +160,16 @@ int playMusic(double frequencies[], double durations[], size_t numFrequencies, s
 
     SDL_PauseAudioDevice(audioDevice, 0);
 
+    int check = 0; 
+
+    while(frequencies[check] != 0 && durations[check] != 0) { 
+        check++; 
+    }
+
+    printf("DURATION ARRAY SIZE: %d\n", check-1); 
+
     // In order to make the notes play somewhat unified, we will want to make the buffer bigger
-    for (size_t i = 0; i < numFrequencies; ++i) {
+    for (size_t i = 0; i < check; ++i) {
         Uint32 length = (Uint32)(SAMPLE_RATE * durations[i]);
         Uint8 *buffer = (Uint8 *)malloc(length * 2);  // 2 bytes per sample for AUDIO_S16SYS
 
