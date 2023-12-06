@@ -10,7 +10,7 @@
 
 #define WIDTH 50
 #define HEIGHT 20
-#define DROP_INTERVAL 100000  // Microseconds
+#define DROP_INTERVAL 200000  // Microseconds
 #define HIT_MARGIN 1          // Second
 #define NUM_NOTES 8
 #define MAX_SCORES 1000

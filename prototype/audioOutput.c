@@ -37,7 +37,7 @@ int main() {
 
     pthread_create(&game_thread, NULL, run_game, &thread_args); 
 
-    //sleep(10); 
+    sleep(.5); 
     // using arrays to create output 
     playMusic(frequencies, durations, MAX_NUM_FREQUENCIES, MAX_NUM_DURATIONS, num_durations); 
     

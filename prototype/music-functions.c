@@ -10,18 +10,6 @@
 #define MAX_NUM_DURATIONS 150 // Will need to change this based on song length / duration 
 #define MAX_DURATION 20
 
-// The associated keys, chosen completly randomly
-char keyboard_characters[NOTES_IN_SCALE] = {
-    'A', 
-    'S', 
-    'D', 
-    'F', 
-    'H', 
-    'J', 
-    'K', 
-    'L' 
-}; 
-
 // This is where we will add user input 
 int inputs(double frequencies[], int letters[], double durations[]) { 
 
@@ -79,7 +67,7 @@ int inputs(double frequencies[], int letters[], double durations[]) {
    // Initalize the duration, tonic and letter
    selected_notes[location] = scale->scale[location];
    selected_durations[location] = return_winner_dur(location); 
-   selected_letters[location] = keyboard_characters[location]; 
+   selected_letters[location] = location;  
 
    printf("Scale Deg 1: %lf\n", scale->scale[0]); 
 
@@ -88,7 +76,7 @@ int inputs(double frequencies[], int letters[], double durations[]) {
    while (totalDuration < MAX_DURATION && genCount < MAX_NUM_FREQUENCIES) {
         location = return_winner(location); 
         selected_notes[genCount] = scale->scale[location];
-        selected_letters[genCount] = keyboard_characters[location]; 
+        selected_letters[genCount] = location; 
         selected_durations[genCount] = return_winner_dur(location); 
         totalDuration += selected_durations[genCount];
         genCount++; 
