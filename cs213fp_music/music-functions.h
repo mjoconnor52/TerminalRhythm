@@ -13,7 +13,7 @@
 #define AMPLITUDE 32767
 #define MAX_NUM_FREQUENCIES 150 // Will need to change this based on song length / duration 
 #define MAX_NUM_DURATIONS 150 // Will need to change this based on song length / duration 
-
+#define MAX_DURATION 20
 
 /* Difficulty options: 
     Easy, Medium, Hard, Charlie 

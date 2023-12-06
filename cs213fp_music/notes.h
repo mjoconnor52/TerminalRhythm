@@ -11,7 +11,7 @@
 
 #define MAX_SCALES_IN_MOOD 100
 #define NOTES_IN_OCTAVE 12
-#define NOTES_IN_SCALE 8
+#define NOTES_IN_SCALE 12
 #define STEPS_TO_MINOR 3
 #define NUM_SCALES 12
 #define TUNING_FREQ 440
@@ -69,9 +69,9 @@ double generate_frequency(int distance_to_A);
 
 int distance_to_A(double frequency); 
 
-double* generate_scale(double startingPitch, int scaleType[]); 
+double* generate_scale(double startingPitch, double scaleType[]); 
 
-void generate_rel_scales(int frequency, enum Scale_Mood maj_mood, enum Scale_Mood min_mood); 
+void generate_rel_scales(double frequency, enum Scale_Mood maj_mood, enum Scale_Mood min_mood); 
 
 void populate_hashmap(); 
 

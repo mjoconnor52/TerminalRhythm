@@ -19,14 +19,14 @@ int main() {
     //     printf("Keyboard Characters: %c\n", letters[i]); 
     // }
 
-    for (int i = 0; i < 10; i++) { 
+    for (int i = 0; i < MAX_DURATION; i++) { 
         printf("Frequency %d: %f Duration: %f\n", i+1, frequencies[i], durations[i]); 
     }
 
     // using arrays to create output 
     playMusic(frequencies, durations, MAX_NUM_FREQUENCIES, MAX_NUM_DURATIONS); 
     
-    // Any other artifacts we make, we will want to clean up
+    // Any other artifacts we make, we will want to clean up 
     // cleanup_mem(); 
 
     return 0; 

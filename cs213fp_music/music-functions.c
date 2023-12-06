@@ -8,7 +8,7 @@
 #define AMPLITUDE 32767
 #define MAX_NUM_FREQUENCIES 150 // Will need to change this based on song length / duration 
 #define MAX_NUM_DURATIONS 150 // Will need to change this based on song length / duration 
-#define MAX_DURATION 5
+#define MAX_DURATION 20
 
 // The associated keys, chosen completly randomly
 char keyboard_characters[NOTES_IN_SCALE] = {
@@ -101,11 +101,8 @@ void inputs(double frequencies[], char letters[], double durations[]) {
    the keySelection, and populate the frequencies array with these pitches
    */
 
-
     // for now, we can use the key C_Major, with 12 pitches in increasing order 
     memcpy(frequencies, selected_notes, sizeof(double) * MAX_NUM_FREQUENCIES); 
-
-    //frequencies = realloc(frequencies, sizeof(double) * genCount); 
 
     // This tempDurations will need to be filled with some algorithm which also chooses notes 
     // within the scale 
@@ -114,11 +111,11 @@ void inputs(double frequencies[], char letters[], double durations[]) {
     // Whole times
     //int offset = 0; 
 
-    //letters = realloc(letters, sizeof(char) * genCount); 
-
     memcpy(durations, selected_durations, sizeof(double) * MAX_NUM_DURATIONS); 
 
-    //durations = realloc(durations, sizeof(double) * genCount); 
+    // frequencies = realloc(frequencies, sizeof(double) * genCount); 
+    // letters = realloc(letters, sizeof(char) * genCount); 
+    // durations = realloc(durations, sizeof(double) * genCount); 
 
 } 
 

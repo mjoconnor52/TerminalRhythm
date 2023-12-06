@@ -34,7 +34,7 @@ int distance_to_A(double frequency){
 double* generate_scale(double startingPitch, double *scaleType)
 {
    double * scale = malloc(sizeof(double) * NOTES_IN_SCALE);
-   int start = 0; // where the equation will go after the pitch
+   double start = 0; // where the equation will go after the pitch
    scale[0] = startingPitch; // This 0 is the index of the array
 
    start = distance_to_A(startingPitch);
@@ -54,8 +54,6 @@ double* generate_scale(double startingPitch, double *scaleType)
       }
    }
 
-   printf("\nStart: %d\n", start); 
-
    // Increment each note in the scale
    for (int i = 1; i < NOTES_IN_SCALE; i++)
    {
@@ -73,17 +71,17 @@ double* generate_scale(double startingPitch, double *scaleType)
    return scale; 
 }
 
-int main()
-{
+int main() {
 
-   int A5 = 392;
+   int G5 = 392;
 
    double MajorScaleSteps[NOTES_IN_SCALE] = {WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE};
    double MinorScaleSteps[NOTES_IN_SCALE] = {WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF, WHOLE, WHOLE};
+   double ChromaticScaleSteps[NOTES_IN_SCALE] = {HALF, HALF, HALF, HALF, HALF, HALF, HALF, HALF, HALF, HALF, HALF}; 
 
    scales_info_t *storedScale = malloc(sizeof(scales_info_t));
 
-   storedScale->scale = generate_scale(A5, MajorScaleSteps);
+   storedScale->scale = generate_scale(G5, ChromaticScaleSteps);
 
    for (int i = 0; i < NOTES_IN_SCALE; i++)
    {
