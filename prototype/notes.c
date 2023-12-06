@@ -16,8 +16,9 @@ const double half = quarter * 2;
 const double whole = quarter * 4; 
 
 // Local constants for the creation function
-int MajorScaleSteps[NOTES_IN_SCALE] = {WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF}; 
-int MinorScaleSteps[NOTES_IN_SCALE] = {WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE, WHOLE};
+double MajorScaleSteps[NOTES_IN_SCALE] = {WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE};
+double MinorScaleSteps[NOTES_IN_SCALE] = {WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF, WHOLE, WHOLE};
+double ChromaticScaleSteps[NOTES_IN_SCALE] = {HALF, HALF, HALF, HALF, HALF, HALF, HALF, HALF, HALF, HALF, HALF}; 
 
 hashmap_header_t *mood_notes;
 
@@ -40,7 +41,7 @@ void hashmap_init()
 void add_hashnode(enum Scale_Mood mood, scales_info_t * scale)
 {
 
-   int sixth = 6; 
+   int sixth = 5; 
 
    // If mood_notes is null, we skip this entirely
 
@@ -53,6 +54,7 @@ void add_hashnode(enum Scale_Mood mood, scales_info_t * scale)
       // if we are able to find the item, we will add it to the values of our hashmap and we are done
       if (current->mood == mood)
       {
+         // To Do: Change to loop 
          // I want to avoid possible repeats in the code, I chose the sixth but idk if that's the best
          if(scale->scale[sixth] == current->scales[current->index]->scale[sixth ])
             return; 
@@ -210,7 +212,7 @@ int distance_to_A(double frequency){
  * \return A scale of the starting pitch to the ending pitch (which will be the scale param)
  *  I did this because it will be easier when we make the scale struct 
  */
-double* generate_scale(double startingPitch, int scaleType[])
+double* generate_scale(double startingPitch, double scaleType[])
 {
    double * scale = malloc(sizeof(double) * NOTES_IN_SCALE);
    scale[0] = startingPitch; // This 0 is the index of the array
@@ -256,7 +258,7 @@ double* generate_scale(double startingPitch, int scaleType[])
  * \returns Side effect: Affects the hashmap
  * 
 */
-void generate_rel_scales(int frequency, enum Scale_Mood maj_mood, enum Scale_Mood min_mood){
+void generate_rel_scales(double frequency, enum Scale_Mood maj_mood, enum Scale_Mood min_mood){
 
    scales_info_t *storedMajor = malloc(sizeof(scales_info_t));
    scales_info_t *storedMinor = malloc(sizeof(scales_info_t));
@@ -281,7 +283,7 @@ void generate_rel_scales(int frequency, enum Scale_Mood maj_mood, enum Scale_Moo
  * This function will create, and populate the hashmap
 */
 void populate_hashmap(){
-   int major_freqs[NUM_SCALES] = {262, 277, 294, 311, 330, 349, 370, 392, 415, 440, 466, 493}; 
+   double major_freqs[NUM_SCALES] = {261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 369.99, 392, 415.3, 440, 466.16, 493.88}; 
 
    hashmap_init(); 
 

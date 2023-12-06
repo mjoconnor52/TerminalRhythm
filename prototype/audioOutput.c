@@ -14,10 +14,11 @@ int main() {
     //NOTE: Letters will be represented as there locations
     // in the keyboard (A=0, S=1, D=2, F=3, H=4, J=5, K =6, L=7)
     int letters[MAX_NUM_DURATIONS]; 
+    int num_durations; 
 
     // generating music based on user input 
     // storing values in frequencies and durations arrays 
-    inputs(frequencies, letters, durations); 
+    num_durations = inputs(frequencies, letters, durations); 
 
     // for(int i = 0; i < MAX_NUM_DURATIONS; i++){
     //     printf("Keyboard Characters: %c\n", letters[i]); 
@@ -32,12 +33,13 @@ int main() {
 
     thread_args.duration = durations; 
     thread_args.index = letters; 
-    thread_args.song_total_duration = MAX_NUM_DURATIONS; 
+    thread_args.song_total_duration = num_durations; 
 
     pthread_create(&game_thread, NULL, run_game, &thread_args); 
 
+    //sleep(10); 
     // using arrays to create output 
-    playMusic(frequencies, durations, MAX_NUM_FREQUENCIES, MAX_NUM_DURATIONS); 
+    playMusic(frequencies, durations, MAX_NUM_FREQUENCIES, MAX_NUM_DURATIONS, num_durations); 
     
     pthread_join(game_thread, NULL); 
 

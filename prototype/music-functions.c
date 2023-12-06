@@ -6,11 +6,24 @@
 
 #define SAMPLE_RATE 44100
 #define AMPLITUDE 32767
-#define MAX_NUM_FREQUENCIES 12 // Will need to change this based on song length / duration 
-#define MAX_NUM_DURATIONS 12 // Will need to change this based on song length / duration 
+#define MAX_NUM_FREQUENCIES 150 // Will need to change this based on song length / duration 
+#define MAX_NUM_DURATIONS 150 // Will need to change this based on song length / duration 
+#define MAX_DURATION 20
+
+// The associated keys, chosen completly randomly
+char keyboard_characters[NOTES_IN_SCALE] = {
+    'A', 
+    'S', 
+    'D', 
+    'F', 
+    'H', 
+    'J', 
+    'K', 
+    'L' 
+}; 
 
 // This is where we will add user input 
-void inputs(double frequencies[], int letters[], double durations[]) { 
+int inputs(double frequencies[], int letters[], double durations[]) { 
 
     /*
     if statements here to choose one of these sorted 2d-arrays 
@@ -66,23 +79,27 @@ void inputs(double frequencies[], int letters[], double durations[]) {
    // Initalize the duration, tonic and letter
    selected_notes[location] = scale->scale[location];
    selected_durations[location] = return_winner_dur(location); 
-   selected_letters[location] = location; 
+   selected_letters[location] = keyboard_characters[location]; 
 
-   // printf("%lf", scale->scale[0]); 
+   printf("Scale Deg 1: %lf\n", scale->scale[0]); 
 
-   for (int i = 1; i < MAX_NUM_FREQUENCIES; i++)
-   {
-    location = return_winner(location); 
-    selected_notes[i] = scale->scale[location];
-    selected_letters[i] = location; 
-    selected_durations[i] = return_winner_dur(location); 
-   }
+   int genCount = 0; 
+   double totalDuration = 0; 
+   while (totalDuration < MAX_DURATION && genCount < MAX_NUM_FREQUENCIES) {
+        location = return_winner(location); 
+        selected_notes[genCount] = scale->scale[location];
+        selected_letters[genCount] = keyboard_characters[location]; 
+        selected_durations[genCount] = return_winner_dur(location); 
+        totalDuration += selected_durations[genCount];
+        genCount++; 
+   } 
 
-    /* 
-    Now, using the scale degrees, we can find the corresponding pitches from 
-    the keySelection, and populate the frequencies array with these pitches
-    */
+   printf("genCount: %d totalDuration: %lf\n", genCount, totalDuration); 
 
+   /* 
+   Now, using the scale degrees, we can find the corresponding pitches from 
+   the keySelection, and populate the frequencies array with these pitches
+   */
 
     // for now, we can use the key C_Major, with 12 pitches in increasing order 
     memcpy(frequencies, selected_notes, sizeof(double) * MAX_NUM_FREQUENCIES); 
@@ -96,12 +113,18 @@ void inputs(double frequencies[], int letters[], double durations[]) {
 
     memcpy(durations, selected_durations, sizeof(double) * MAX_NUM_DURATIONS); 
 
+    return genCount; 
+
+    // frequencies = realloc(frequencies, sizeof(double) * genCount); 
+    // letters = realloc(letters, sizeof(char) * genCount); 
+    // durations = realloc(durations, sizeof(double) * genCount); 
+
 } 
 
 // This function is done 
 void generateSineWave(Uint8 *buffer, double frequency, double duration) {
     Uint32 length = (Uint32)(SAMPLE_RATE * duration);
-    double timeStep = 1.0 / SAMPLE_RATE;
+    double timeStep = 1.0 / SAMPLE_RATE; 
 
     for (Uint32 i = 0; i < length; ++i) {
         double t = i * timeStep;
@@ -114,7 +137,7 @@ void generateSineWave(Uint8 *buffer, double frequency, double duration) {
 }
 
 // This function is done 
-int playMusic(double frequencies[], double durations[], size_t numFrequencies, size_t numDurations) {
+int playMusic(double frequencies[], double durations[], size_t numFrequencies, size_t numDurations, int count) {
 
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -136,8 +159,10 @@ int playMusic(double frequencies[], double durations[], size_t numFrequencies, s
 
     SDL_PauseAudioDevice(audioDevice, 0);
 
+    printf("DURATION ARRAY SIZE: %d\n", count-1); 
+
     // In order to make the notes play somewhat unified, we will want to make the buffer bigger
-    for (size_t i = 0; i < numFrequencies; ++i) {
+    for (size_t i = 0; i < count; ++i) {
         Uint32 length = (Uint32)(SAMPLE_RATE * durations[i]);
         Uint8 *buffer = (Uint8 *)malloc(length * 2);  // 2 bytes per sample for AUDIO_S16SYS
 

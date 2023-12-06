@@ -11,9 +11,9 @@
 
 #define SAMPLE_RATE 44100
 #define AMPLITUDE 32767
-#define MAX_NUM_FREQUENCIES 12 // Will need to change this based on song length / duration 
-#define MAX_NUM_DURATIONS 12 // Will need to change this based on song length / duration 
-
+#define MAX_NUM_FREQUENCIES 150 // Will need to change this based on song length / duration 
+#define MAX_NUM_DURATIONS 150 // Will need to change this based on song length / duration 
+#define MAX_DURATION 20
 
 /* Difficulty options: 
     Easy, Medium, Hard, Charlie 
@@ -35,11 +35,11 @@ typedef struct notes{
     int duration; 
 } notes_t; 
 
-void inputs(double frequencies[], int letters[], double durations[]); 
+int inputs(double frequencies[], int letters[], double durations[]); 
 
 void generateSineWave(Uint8 *buffer, double frequency, double duration); 
 
-int playMusic(double frequencies[], double durations[], size_t numFrequencies, size_t numDurations); 
+int playMusic(double frequencies[], double durations[], size_t numFrequencies, size_t numDurations, int count); 
 
 void cleanup_mem(); 
 

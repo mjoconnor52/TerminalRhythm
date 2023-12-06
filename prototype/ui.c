@@ -7,36 +7,51 @@
 #include <ctype.h>
 #include "ui.h"
 
-Note notes[NUM_NOTES];
+Note notes[AMOUNT_NOTES];
 int score = 0;
 int combo = 0;
+int current_note_index = 0;
+int sequence_length = 0; 
+int offset = 0; 
+
 pthread_mutex_t mutex;
 char notes_letters[8] = {'A','S','D', 'F', 'H', 'J','K','L'};
 
-void init_notes() {
-    for (int i = 0; i < NUM_NOTES; i++) {
-        notes[i].letter = notes_letters[i];
-        notes[i].x = i * (WIDTH / NUM_NOTES) + (WIDTH / NUM_NOTES - 1) / 2;
-        notes[i].y = 0;
+void init_notes(int * note_sequence, double* durations) {
+    time_t currentTime;
+    time(&currentTime);
+    for (int i = 0; i < sequence_length; i++) {
+        int index1 = note_sequence[i];
+        notes[i].letter = notes_letters[index1];
+        notes[i].x = note_sequence[i] * (WIDTH / NUM_NOTES) + (WIDTH / NUM_NOTES - 1) / 2;
         notes[i].active = false;
-        notes[i].dropTime = 0;
+        notes[i].y = 1;
+        if (i == 0){
+        notes[i].dropTime = currentTime + offset + durations[i];
+        } else{
+        notes[i].dropTime = notes[i-1].dropTime + durations[i];
+        }
+        
     }
 }
 
-void generate_note(int letters_index) {
-    if (!notes[letters_index].active) {
-        notes[letters_index].active = true;
-        notes[letters_index].y = 1;
-        time(&notes[letters_index].dropTime);
+void generate_note() {
+    time_t currentTime2;
+    time(&currentTime2);
+   
+    if (current_note_index < sequence_length && difftime(currentTime2, notes[current_note_index].dropTime) >= 0) {
+    notes[current_note_index].active = true;
+    current_note_index++;
     }
 }
 
 void move_notes() {
-    for (int i = 0; i < NUM_NOTES; i++) {
+    for (int i = 0; i < sequence_length; i++) {
         if (notes[i].active) {
             notes[i].y++;
             if (notes[i].y > HEIGHT-1) {
                 notes[i].active = false;
+                combo = 0;
             }
         }
     }
@@ -47,11 +62,12 @@ void draw() {
     mvhline(HEIGHT - 2, 0, '-', WIDTH);
     mvhline(HEIGHT - 6, 0, '-', WIDTH);
     for (int i = 0; i < NUM_NOTES; i++) {
-        mvaddch(0, notes[i].x, notes_letters[i]);
+        int location = i * (WIDTH / NUM_NOTES) + (WIDTH / NUM_NOTES - 1) / 2;
+        mvaddch(0, location, notes_letters[i]);
     }
-    for (int i = 0; i < NUM_NOTES; i++) {
+    for (int i = 0; i < sequence_length; i++) {
         if (notes[i].active) {
-            mvaddch(notes[i].y, notes[i].x, notes[i].letter);
+        mvaddch(notes[i].y, notes[i].x, notes[i].letter);
         }
     }
     
@@ -61,18 +77,16 @@ void draw() {
 }
 
 void *note_movement(void *args) {
-    thread_struct_t *  thread_args = (thread_struct_t *) args; 
-    int current_num_notes = 0; 
-    while (thread_args->song_total_duration != current_num_notes){
+    while (true) {
         pthread_mutex_lock(&mutex);
-        generate_note(thread_args->index[current_num_notes]);
+        generate_note();
         move_notes();
         pthread_mutex_unlock(&mutex);
         usleep(DROP_INTERVAL);
-        current_num_notes++;
     }
     return NULL;
 }
+
 
 void record_score(int finalScore) {
     FILE *file = fopen("scores.txt", "a"); // Open scores.txt in append mode
@@ -145,7 +159,7 @@ void check_input() {
         ch = toupper(ch);  // Convert to uppercase
         
         pthread_mutex_lock(&mutex);  // Lock the mutex
-        for (int i = 0; i < NUM_NOTES; i++) {  // Loop through the notes
+        for (int i = 0; i < sequence_length; i++) {  // Loop through the notes
             if (notes[i].active && ch == notes[i].letter) {  // If the note is active and the key matches
                 // Check if the note is within the bottom line HIT_MARGIN
                   if ((HEIGHT - 2 - notes[i].y) > HIT_MARGIN && (notes[i].y - HEIGHT +6) > HIT_MARGIN) {  
@@ -219,6 +233,20 @@ void check_input() {
     }
 }
 
+bool check_active(){
+    bool active =  true; 
+    int count = 0;
+    for(int i = 0; i < sequence_length; i++){
+         if (notes[i].active == false){
+            count ++;
+         }   
+        }
+    
+    if(count == sequence_length){
+        active = false;
+    }
+    return active; 
+}
 
 // 
 void * run_game(void* args) {
@@ -230,14 +258,16 @@ void * run_game(void* args) {
     curs_set(0);
 
     pthread_t movement_thread;
-    thread_struct_t input_args = *((thread_struct_t *) args); 
+    thread_struct_t input_args = *((thread_struct_t *) args);
+
+    sequence_length = input_args.song_total_duration;  
 
     pthread_mutex_init(&mutex, NULL);
 
-    init_notes();
+    init_notes(input_args.index, input_args.duration);
 
     // We need to sync up the music and game together
-    sleep(8); 
+    //sleep(8); 
 
     pthread_create(&movement_thread, NULL, note_movement, &input_args);
 
@@ -245,7 +275,9 @@ void * run_game(void* args) {
         draw();
         check_input();
 
-        if (score >= 2000) {  // End game condition
+        
+
+        if (current_note_index == sequence_length && !check_active()) {  // End game condition
             record_score(score);
             draw();
             break;

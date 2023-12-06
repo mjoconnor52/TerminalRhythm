@@ -6,10 +6,11 @@ all: audioOutput
 
 clean:
 	rm -f *.o
+	rm -f audioOutput
 
 
 audioOutput: audioOutput.c  music-functions.o notes.o lottery.o ui.o
-	$(CC) $(CFLAGS) -o audioOutput.exe audioOutput.c music-functions.o lottery.o notes.o ui.o -lSDL2 -lm -lncurses -lpthread
+	$(CC) $(CFLAGS) -o audioOutput audioOutput.c music-functions.o lottery.o notes.o ui.o -lSDL2 -lm -lncurses -lpthread
 
 notes.o: notes.c notes.h
 	$(CC) $(CFLAGS)  -c notes.c
