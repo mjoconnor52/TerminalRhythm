@@ -300,6 +300,15 @@ bool check_active(){
     return active; 
 }
 
+// A function that will print the high-scores found in the scores.txt file
+void print_scores(){
+    int scores[MAX_SCORES];
+    int count = read_scores(scores, MAX_SCORES);
+    sort_scores(scores, count);
+    print_top_scores(scores, count);
+}
+
+
 /** integrate everthing together and run the ui
  *
  * \param args remnant of thread
@@ -354,11 +363,7 @@ void * run_game(void* args) {
     getch();
 
     endwin();
-    int scores[MAX_SCORES];
-    int count = read_scores(scores, MAX_SCORES);
-    sort_scores(scores, count);
-    print_top_scores(scores, count);
+    print_scores(); 
 
-    
     return NULL; 
 }

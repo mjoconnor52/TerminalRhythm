@@ -43,3 +43,12 @@ Score: 0
 >>>>>>> 418a3a96267df7c29c273663a7f1b79f33656725
 Score: 760
 Score: 0
+Score: 0
+Score: 260
+Score: 640
+Score: 610
+Score: 0
+Score: 270
+Score: 380
+Score: 0
+Score: 0

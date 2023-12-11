@@ -35,7 +35,9 @@ typedef struct notes{
     int duration; 
 } notes_t; 
 
-int inputs(double frequencies[], int letters[], double durations[]); 
+void music_func_init(); 
+
+int create_random_song(double frequencies[], int letters[], double durations[]); 
 
 void generateSineWave(Uint8 *buffer, double frequency, double duration); 
 

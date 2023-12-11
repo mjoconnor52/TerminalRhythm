@@ -9,6 +9,13 @@ Would you like us to make a bunch of header/.h files for our project?
     YES, PLEASE INCLUDE (add .h files for all of our .c functions) ~ Added 
 Is it ok if we have all of our notes just written out? 
     Proabably not
-Help modifying the music generation 
+Would you like us to add the docuemtation we have in the code for the .h file
+    NO, Doc completed tho
 Help with cleaning up the data in the hashmap
-    Yes please clean it all up
+    Yes please clean it all up CLEAN
+
+
+## TODO:
+
+* Add musical complexity
+* Change wave in function

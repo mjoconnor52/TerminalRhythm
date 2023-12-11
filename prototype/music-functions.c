@@ -4,49 +4,62 @@
 #include <stdlib.h>
 #include "music-functions.h"
 
-// This is where we will add user input 
-int inputs(double frequencies[], int letters[], double durations[]) { 
+/**
+ * An init_function to avoid repetiting expensive hashmap-creation function
+ * There may be also some additional things we would want to do, so it does it accordingly
+*/
+void music_func_init(){
+    // Start creating our hashmap
+    populate_hashmap(); 
+}
 
-   double selected_notes[MAX_NUM_FREQUENCIES]; 
-   double selected_durations[MAX_NUM_DURATIONS]; 
-   int selected_letters[MAX_NUM_FREQUENCIES]; 
+/**
+ * This function will create a random song at `MAX_DURATION` or the `return` of the function, which could be equal to 
+ * `MAX_DURATION` but is likely not. `frequencies`, `letters`, and `durations` are all return types in addition to the
+ * int return type, which will be how many spots in the array were filled. The input arrays should at least
+ * of size `MAX_DURATIONS` otherwise you may get a seg-fault
+ * \param frequencies The frequencies of the song
+ * \param letters The corresponding indeces for the keyboard letters to be fed to UI
+ * \param duration How long each frequency/letter would be 
+ * \return An int from between (0, MAX_DURATION] which represents how much of the array has been used 
+*/
+int create_random_song(double frequencies[], int letters[], double durations[]) { 
+
+//    double selected_notes[MAX_NUM_FREQUENCIES]; 
+//    double selected_durations[MAX_NUM_DURATIONS]; 
+//    int selected_letters[MAX_NUM_FREQUENCIES]; 
    //Starting at the tonic
 
    int location = 0; 
 
     // This will probably be some sort of selected enum.
     enum Scale_Mood mood = All; 
-
-    // HASHMAP OPTION
-    // Start creating our hashmap
-    populate_hashmap(); 
     
     scales_info_t * scale = get_random_hashkey(mood);
 
    // Initalize the duration, tonic and letter
-   selected_notes[location] = scale->scale[location];
-   selected_durations[location] = return_winner_dur(location); 
-   selected_letters[location] = location;  
+   frequencies[location] = scale->scale[location];
+   durations[location] = return_winner_dur(location); 
+   letters[location] = location;  
 
 
    int genCount = 0; 
    double totalDuration = 0; 
    while (totalDuration < MAX_DURATION && genCount < MAX_NUM_FREQUENCIES) {
         location = return_winner(location); 
-        selected_notes[genCount] = scale->scale[location];
-        selected_letters[genCount] = location; 
-        selected_durations[genCount] = return_winner_dur(location); 
-        totalDuration += selected_durations[genCount];
+        frequencies[genCount] = scale->scale[location];
+        letters[genCount] = location; 
+        durations[genCount] = return_winner_dur(location); 
+        totalDuration += durations[genCount];
         genCount++; 
    } 
 
-    memcpy(frequencies, selected_notes, sizeof(double) * MAX_NUM_FREQUENCIES); 
 
-    memcpy(letters, selected_letters, sizeof(int) * MAX_NUM_FREQUENCIES); 
-
-    //int offset = 0; 
-
-    memcpy(durations, selected_durations, sizeof(double) * MAX_NUM_DURATIONS); 
+    // Copying the new elements into the array
+    // I just realized this may not be needed lol
+    // memcpy(frequencies, selected_notes, sizeof(double) * MAX_NUM_FREQUENCIES); 
+    // memcpy(letters, selected_letters, sizeof(int) * MAX_NUM_FREQUENCIES); 
+    // memcpy(durations, selected_durations, sizeof(double) * MAX_NUM_DURATIONS); 
 
     return genCount; 
 
