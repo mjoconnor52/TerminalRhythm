@@ -302,9 +302,13 @@ bool check_active(){
 
 // A function that will print the high-scores found in the scores.txt file
 void print_scores(){
+    printf("Your Score: %d\n", score); 
     int scores[MAX_SCORES];
     int count = read_scores(scores, MAX_SCORES);
     sort_scores(scores, count);
+    if(scores[0] == score){
+        printf("\n***NEW HIGH SCORE***\n\n"); 
+    }
     print_top_scores(scores, count);
 }
 
