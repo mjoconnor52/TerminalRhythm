@@ -9,11 +9,13 @@
 #include <stdio.h>
 #include <math.h>
 
-#define MAX_SCALES_IN_MOOD 100
+
 #define NOTES_IN_OCTAVE 12
 #define NOTES_IN_SCALE 12
 #define STEPS_TO_MINOR 3
 #define NUM_SCALES 12
+#define NUM_SCALE_TYPES 2
+#define MAX_SCALES_IN_MOOD NUM_SCALES * NUM_SCALE_TYPES
 #define TUNING_FREQ 440
 #define WHOLE 2
 #define HALF 1

@@ -113,14 +113,14 @@ scales_info_t *get_random_hashkey(enum Scale_Mood mood)
 * This function will clean up itself in the other scales
 */
 void destory_scales_info(scales_info_t * info){
-   double* scale = info->scale; 
-   scales_info_t* rscale = info->rel; 
-   free(scale); 
-   free(rscale); 
+   info->rel = NULL; 
+   free(info->scale); 
+   info->scale = NULL; 
 }
 
 /**
  * Destroys the hashmap, use at end to avoid memory leaks
+ * It will go to the inner most malloc'd thing, the double scale, and free outward
 */
 void destroy_hashmap()
 {
@@ -133,21 +133,22 @@ void destroy_hashmap()
       hashmap_node_t *temp = current;
       //free all scales inside of temp_scales
       for(int i = 0; i< MAX_SCALES_IN_MOOD; i++){
-         // creating the 
-         scales_info_t * temp_scales =  temp->scales[i]; 
-         if(temp->scales[i] != NULL){
+         // break if we go past the number of possible scales
+         scales_info_t * temp_scales = temp->scales[i]; 
+         if(temp->scales[i] != NULL){ // Contains freeded memory
             destory_scales_info(temp_scales); 
-         } else{
-            free(temp_scales);
-            break; 
-         }
+            free(temp_scales); 
+         } 
       }
 
       // Otherwise keep iterating through
       current = current->next;
       free(temp);
+      temp = NULL; 
    }
+
    free(mood_notes);
+   mood_notes = NULL;
 }
 
 /**

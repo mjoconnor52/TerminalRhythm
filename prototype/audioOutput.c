@@ -37,14 +37,16 @@ int main() {
 
     pthread_create(&game_thread, NULL, run_game, &thread_args); 
 
-    sleep(.5); 
+    //Sleep to check for correct times
+    usleep(5000); 
+    
     // using arrays to create output 
     playMusic(frequencies, durations, MAX_NUM_FREQUENCIES, MAX_NUM_DURATIONS, num_durations); 
     
     pthread_join(game_thread, NULL); 
 
     // Any other artifacts we make, we will want to clean up
-    // cleanup_mem(); 
+    cleanup_mem(); 
 
     return 0; 
 }

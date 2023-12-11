@@ -69,7 +69,6 @@ int inputs(double frequencies[], int letters[], double durations[]) {
    selected_durations[location] = return_winner_dur(location); 
    selected_letters[location] = location;  
 
-   printf("Scale Deg 1: %lf\n", scale->scale[0]); 
 
    int genCount = 0; 
    double totalDuration = 0; 
@@ -81,8 +80,6 @@ int inputs(double frequencies[], int letters[], double durations[]) {
         totalDuration += selected_durations[genCount];
         genCount++; 
    } 
-
-   printf("genCount: %d totalDuration: %lf\n", genCount, totalDuration); 
 
    /* 
    Now, using the scale degrees, we can find the corresponding pitches from 
