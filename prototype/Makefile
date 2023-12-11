@@ -7,6 +7,7 @@ all: audioOutput
 clean:
 	rm -f *.o
 	rm -f audioOutput
+	rm -f prototype
 
 
 audioOutput: audioOutput.c  music-functions.o notes.o lottery.o ui.o

@@ -41,7 +41,7 @@ int main() {
     usleep(5000); 
     
     // using arrays to create output 
-    playMusic(frequencies, durations, MAX_NUM_FREQUENCIES, MAX_NUM_DURATIONS, num_durations); 
+    playMusic(frequencies, durations, num_durations); 
     
     pthread_join(game_thread, NULL); 
 

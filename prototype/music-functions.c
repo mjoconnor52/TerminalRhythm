@@ -7,41 +7,6 @@
 // This is where we will add user input 
 int inputs(double frequencies[], int letters[], double durations[]) { 
 
-    /*
-    if statements here to choose one of these sorted 2d-arrays 
-      -> allKeys 
-      -> happyKeys 
-      -> reflectiveKeys 
-      -> sadKeys 
-      -> darkKeys 
-      -> triumphantKeys
-    */ 
-
-    /* 
-    After choosing a 2d-array, we can randomly (or methodically) 
-    select one of its rows and memcpy that to keySelection 
-    */ 
-
-    /* 
-    An example call choosing a specific key 
-    memcpy(keySelection, allKeys[4], sizeof(allKeys[4])); 
-    */ 
-
-    /*
-    Here is the place were we will generate a logical order 
-    of scale degrees to follow each other. 
-
-    For example, scale degree 1 and 8 are tonic, scale degree 5 is dominant, 
-    2, 4, and 6 are subdominant. 
-    
-    Suppose we start on scale degree 1, the tonic. 
-    From tonic, we move to subdominant 2, 4, or 6. 
-    From subdominant, we can move back to tonic 1, or move to dominant 5. 
-    From dominant 5, we can move to subdominant 4 or 6, or back to tonic 1. 
-    These are the general rules, we can also throw in scale degrees 3 and 7 
-    and make other random exeception rules. 
-    */
-
    double selected_notes[MAX_NUM_FREQUENCIES]; 
    double selected_durations[MAX_NUM_DURATIONS]; 
    int selected_letters[MAX_NUM_FREQUENCIES]; 
@@ -75,28 +40,15 @@ int inputs(double frequencies[], int letters[], double durations[]) {
         genCount++; 
    } 
 
-   /* 
-   Now, using the scale degrees, we can find the corresponding pitches from 
-   the keySelection, and populate the frequencies array with these pitches
-   */
-
-    // for now, we can use the key C_Major, with 12 pitches in increasing order 
     memcpy(frequencies, selected_notes, sizeof(double) * MAX_NUM_FREQUENCIES); 
 
-    // This tempDurations will need to be filled with some algorithm which also chooses notes 
-    // within the scale 
-
     memcpy(letters, selected_letters, sizeof(int) * MAX_NUM_FREQUENCIES); 
-    // Whole times
+
     //int offset = 0; 
 
     memcpy(durations, selected_durations, sizeof(double) * MAX_NUM_DURATIONS); 
 
     return genCount; 
-
-    // frequencies = realloc(frequencies, sizeof(double) * genCount); 
-    // letters = realloc(letters, sizeof(char) * genCount); 
-    // durations = realloc(durations, sizeof(double) * genCount); 
 
 } 
 
@@ -116,7 +68,7 @@ void generateSineWave(Uint8 *buffer, double frequency, double duration) {
 }
 
 // This function is done 
-int playMusic(double frequencies[], double durations[], size_t numFrequencies, size_t numDurations, int count) {
+int playMusic(double frequencies[], double durations[], int count) {
 
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());

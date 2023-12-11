@@ -39,7 +39,7 @@ int inputs(double frequencies[], int letters[], double durations[]);
 
 void generateSineWave(Uint8 *buffer, double frequency, double duration); 
 
-int playMusic(double frequencies[], double durations[], size_t numFrequencies, size_t numDurations, int count); 
+int playMusic(double frequencies[], double durations[], int count); 
 
 void cleanup_mem(); 
 
