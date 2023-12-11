@@ -3,13 +3,14 @@
 #ifndef NOTES
 #define NOTES
 
+// Includes
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
-
+// Defined const for making the scale
 #define NOTES_IN_OCTAVE 12
 #define NOTES_IN_SCALE 12
 #define STEPS_TO_MINOR 3
@@ -21,6 +22,8 @@
 #define HALF 1
 #define DUR_TYPES 5
 
+// A enum that will determine the mood/feeling of the piece overall. We didn't end up using it a 
+// lot in the project. 
 enum Scale_Mood{
    All,
    Happy, 
@@ -52,6 +55,9 @@ typedef struct hashmap_header
 {
    hashmap_node_t *head;
 } hashmap_header_t;
+
+
+// See .c file for comments on the documentation
 
 void hashmap_init(); 
 
