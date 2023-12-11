@@ -11,7 +11,7 @@ clean:
 
 
 game-manager: game-manager.c  music-functions.o notes.o lottery.o ui.o
-	$(CC) $(CFLAGS) -o prototype game-manager.c music-functions.o lottery.o notes.o ui.o -lSDL2 -lm -lncurses -lpthread
+	$(CC) $(CFLAGS) -o prototype-exe game-manager.c music-functions.o lottery.o notes.o ui.o -lSDL2 -lm -lncurses -lpthread
 
 notes.o: notes.c notes.h
 	$(CC) $(CFLAGS)  -c notes.c
