@@ -4,12 +4,6 @@
 #include <stdlib.h>
 #include "music-functions.h"
 
-#define SAMPLE_RATE 44100
-#define AMPLITUDE 32767
-#define MAX_NUM_FREQUENCIES 150 // Will need to change this based on song length / duration 
-#define MAX_NUM_DURATIONS 150 // Will need to change this based on song length / duration 
-#define MAX_DURATION 20
-
 // This is where we will add user input 
 int inputs(double frequencies[], int letters[], double durations[]) { 
 
@@ -144,8 +138,6 @@ int playMusic(double frequencies[], double durations[], size_t numFrequencies, s
 
     SDL_PauseAudioDevice(audioDevice, 0);
 
-    printf("DURATION ARRAY SIZE: %d\n", count-1); 
-
     // In order to make the notes play somewhat unified, we will want to make the buffer bigger
     for (size_t i = 0; i < count; ++i) {
         Uint32 length = (Uint32)(SAMPLE_RATE * durations[i]);
@@ -169,44 +161,3 @@ int playMusic(double frequencies[], double durations[], size_t numFrequencies, s
 void cleanup_mem(){
     destroy_hashmap(); 
 }
-
-
-/* Descriptor: an emotion 
-    -> Choose a musical key based on emotion. 
-       This could be done in many ways... 
-    -> Starting simple, we could just choose a few basic 
-       emotions and sort the keys under these. 
-    -> A way to add complexity: Use a file of emotional 
-       words. We could make our own few categories, such 
-       as happy, sad, angry, confused, and group the music 
-       keys into these. Then we could sort the emotional 
-       words from the file by these categories. A user will 
-       type in a word. If it doesn't match a word in the file 
-       they would be asked to try again, otherwise if it has 
-       a match in the emotional words file, it would check the 
-       categorical emotion, find the keys in that group, and 
-       then (if there are multiple) randomly select one key. 
-*/
-// typedef struct song { 
-//     int * difficulty; 
-//     char* descriptor; 
-//     double frequencies[]; 
-//     int * num_frequencies; 
-//     double durations[]; 
-//     int * num_durations; 
-// } song_t; 
-
-/* maybe enum or something else would make more sense 
-    in order to equate 0 is Easy, 1 is Medium, etc. */ 
-
-    // int difficultyRating = -1; 
-
-    // if (strcmp(difficulty, "Easy") == 0) { 
-    //     song->difficulty = 0; 
-    // } else if (strcmp(difficulty, "Medium") == 0) { 
-    //     song->difficulty = 1; 
-    // } else if (strcmp(difficulty, "Hard") == 0) { 
-    //     song->difficulty = 2; 
-    // } else if (strcmp(difficulty, "Charlie") == 0) { 
-    //     song->difficulty = 3; 
-    // }

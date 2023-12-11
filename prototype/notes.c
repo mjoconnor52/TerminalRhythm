@@ -6,15 +6,6 @@
 #include <math.h>
 #include "notes.h"
 
-
-// Modify to make it encapsulated
-
-const double quarter = 1;
-const double sixteenth = quarter / 4; 
-const double eighth = quarter / 2; 
-const double half = quarter * 2; 
-const double whole = quarter * 4; 
-
 // Local constants for the creation function
 double MajorScaleSteps[NOTES_IN_SCALE] = {WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE};
 double MinorScaleSteps[NOTES_IN_SCALE] = {WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF, WHOLE, WHOLE};
