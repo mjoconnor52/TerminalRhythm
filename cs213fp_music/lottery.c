@@ -3,7 +3,13 @@
 #include <stdlib.h>
 #include "lottery.h"
 
-double possible_durs[DUR_TYPES] = {1, .25, .5, 2, 4}; 
+const double quarter = 1;
+const double sixteenth = quarter / 4; 
+const double eighth = quarter / 2; 
+const double half = quarter * 2; 
+const double whole = quarter * 4; 
+
+double possible_durs[DUR_TYPES] = {quarter, sixteenth, eighth, half, whole}; 
 
 // The range of acceptable values in the struct
 int possible_values[8][8] = {

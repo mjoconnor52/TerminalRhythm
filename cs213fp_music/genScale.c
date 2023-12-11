@@ -1,4 +1,3 @@
-// This file is for defining notes, scales, triads
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
@@ -10,29 +9,23 @@
 #define NOTES_IN_SCALE 12
 #define TUNING_FREQ 440
 
-typedef struct scales_info{
+// 
+typedef struct scales_info {
    double* scale; 
    double* rel; 
 } scales_info_t; 
 
-// double generate_next_frequency(int note){
-//    // the bitshift will make the 2^n value,
-//    return TUNING_FREQ * pow(2, (note * (1 / (double) TUNING_FREQ) * (1 / (double)NOTES_IN_SCALE)));
-// }
-
-double generate_next_frequency(int note)
-{
+double generate_next_frequency(int note) {
    // the bitshift will make the 2^n value,
    return TUNING_FREQ *  pow(2, (note * (1 / (double) NOTES_IN_SCALE)));
 }
 
 // T
-int distance_to_A(double frequency){
+int distance_to_A(double frequency) {
    return round(NOTES_IN_SCALE * log2(frequency / (double) TUNING_FREQ));
 }
 
-double* generate_scale(double startingPitch, double *scaleType)
-{
+double* generate_scale(double startingPitch, double *scaleType) {
    double * scale = malloc(sizeof(double) * NOTES_IN_SCALE);
    double start = 0; // where the equation will go after the pitch
    scale[0] = startingPitch; // This 0 is the index of the array
@@ -43,48 +36,30 @@ double* generate_scale(double startingPitch, double *scaleType)
    start = 0; 
 
    /// modifies freq to find freq in equation w/o saving
-   if (startingPitch >= TUNING_FREQ){
-      while (round(generate_next_frequency(start)) != startingPitch){
+   if (startingPitch >= TUNING_FREQ) {
+      while (round(generate_next_frequency(start)) != startingPitch) {
          start++;
       }
    }
    else {
-      while (round(generate_next_frequency(start)) != startingPitch){
+      while (round(generate_next_frequency(start)) != startingPitch) {
          start--;
       }
    }
 
    // Increment each note in the scale
-   for (int i = 1; i < NOTES_IN_SCALE; i++)
-   {
-      if (scaleType[i - 1] == HALF){
+   for (int i = 1; i < NOTES_IN_SCALE; i++) {
+      
+      if (scaleType[i - 1] == HALF) {
          start++;
          scale[i] = generate_next_frequency(start);
       }
-      else if (scaleType[i - 1] == WHOLE){
+      else if (scaleType[i - 1] == WHOLE){ 
          start += 2;
          scale[i] = generate_next_frequency(start);
-
       }
    }
 
    return scale; 
-}
 
-int main() {
-
-   int G5 = 392;
-
-   double MajorScaleSteps[NOTES_IN_SCALE] = {WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE};
-   double MinorScaleSteps[NOTES_IN_SCALE] = {WHOLE, HALF, WHOLE, WHOLE, HALF, WHOLE, WHOLE, WHOLE, HALF, WHOLE, WHOLE};
-   double ChromaticScaleSteps[NOTES_IN_SCALE] = {HALF, HALF, HALF, HALF, HALF, HALF, HALF, HALF, HALF, HALF, HALF}; 
-
-   scales_info_t *storedScale = malloc(sizeof(scales_info_t));
-
-   storedScale->scale = generate_scale(G5, ChromaticScaleSteps);
-
-   for (int i = 0; i < NOTES_IN_SCALE; i++)
-   {
-      printf("%f\n", storedScale->scale[i]);
-   }
 }

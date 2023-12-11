@@ -15,10 +15,6 @@ int main() {
     // storing values in frequencies and durations arrays 
     inputs(frequencies, letters, durations); 
 
-    // for(int i = 0; i < MAX_NUM_DURATIONS; i++){
-    //     printf("Keyboard Characters: %c\n", letters[i]); 
-    // }
-
     for (int i = 0; i < MAX_DURATION; i++) { 
         printf("Frequency %d: %f Duration: %f\n", i+1, frequencies[i], durations[i]); 
     }

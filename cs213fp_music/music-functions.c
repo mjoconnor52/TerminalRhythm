@@ -25,41 +25,6 @@ char keyboard_characters[NOTES_IN_SCALE] = {
 // This is where we will add user input 
 void inputs(double frequencies[], char letters[], double durations[]) { 
 
-    /*
-    if statements here to choose one of these sorted 2d-arrays 
-      -> allKeys 
-      -> happyKeys 
-      -> reflectiveKeys 
-      -> sadKeys 
-      -> darkKeys 
-      -> triumphantKeys
-    */ 
-
-    /* 
-    After choosing a 2d-array, we can randomly (or methodically) 
-    select one of its rows and memcpy that to keySelection 
-    */ 
-
-    /* 
-    An example call choosing a specific key 
-    memcpy(keySelection, allKeys[4], sizeof(allKeys[4])); 
-    */ 
-
-    /*
-    Here is the place were we will generate a logical order 
-    of scale degrees to follow each other. 
-
-    For example, scale degree 1 and 8 are tonic, scale degree 5 is dominant, 
-    2, 4, and 6 are subdominant. 
-    
-    Suppose we start on scale degree 1, the tonic. 
-    From tonic, we move to subdominant 2, 4, or 6. 
-    From subdominant, we can move back to tonic 1, or move to dominant 5. 
-    From dominant 5, we can move to subdominant 4 or 6, or back to tonic 1. 
-    These are the general rules, we can also throw in scale degrees 3 and 7 
-    and make other random exeception rules. 
-    */
-
    double selected_notes[MAX_NUM_FREQUENCIES]; 
    double selected_durations[MAX_NUM_DURATIONS]; 
    char selected_letters[MAX_NUM_FREQUENCIES]; 
@@ -112,10 +77,6 @@ void inputs(double frequencies[], char letters[], double durations[]) {
     //int offset = 0; 
 
     memcpy(durations, selected_durations, sizeof(double) * MAX_NUM_DURATIONS); 
-
-    // frequencies = realloc(frequencies, sizeof(double) * genCount); 
-    // letters = realloc(letters, sizeof(char) * genCount); 
-    // durations = realloc(durations, sizeof(double) * genCount); 
 
 } 
 

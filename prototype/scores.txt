@@ -36,4 +36,8 @@ Score: 210
 Score: 0
 Score: 300
 Score: 0
+<<<<<<< HEAD
 Score: 1010
+=======
+Score: 0
+>>>>>>> 418a3a96267df7c29c273663a7f1b79f33656725
