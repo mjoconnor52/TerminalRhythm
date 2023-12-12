@@ -20,7 +20,7 @@
 #define TUNING_FREQ 440
 #define WHOLE 2
 #define HALF 1
-#define DUR_TYPES 5
+
 
 // A enum that will determine the mood/feeling of the piece overall. We didn't end up using it a 
 // lot in the project. 

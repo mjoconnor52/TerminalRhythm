@@ -8,6 +8,7 @@
 #include "notes.h"
 
 #define SCALE_SIZE 8
+#define DUR_TYPES 5
 
 int return_winner(int location);
 

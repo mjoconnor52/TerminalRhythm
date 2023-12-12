@@ -36,6 +36,7 @@ int create_random_song(double frequencies[], int letters[], double durations[]) 
     enum Scale_Mood mood = All; 
     
     scales_info_t * scale = get_random_hashkey(mood);
+    scales_info_t * scale2 = get_random_hashkey(mood); 
 
    // Initalize the duration, tonic and letter
    frequencies[location] = scale->scale[location];
@@ -45,9 +46,16 @@ int create_random_song(double frequencies[], int letters[], double durations[]) 
 
    int genCount = 0; 
    double totalDuration = 0; 
+   int sections = MAX_NUM_FREQUENCIES / 3; 
    while (totalDuration < MAX_DURATION && genCount < MAX_NUM_FREQUENCIES) {
         location = return_winner(location); 
-        frequencies[genCount] = scale->scale[location];
+        if (genCount < sections || (genCount > sections * 2)) { 
+            frequencies[genCount] = scale->scale[location];
+        } 
+        else {
+            frequencies[genCount] = scale2->scale[location];
+        }
+
         letters[genCount] = location; 
         durations[genCount] = return_winner_dur(location); 
         totalDuration += durations[genCount];
