@@ -6,8 +6,9 @@
 #include <unistd.h>
 #include <ctype.h>
 #include "ui.h"
+#include "music-functions.h"
 
-Note notes[AMOUNT_NOTES];
+Note notes[MAX_NUM_DURATIONS];
 int score = 0;
 int combo = 0;
 int current_note_index = 0;

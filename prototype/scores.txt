@@ -7,3 +7,6 @@ Score: 1110
 Score: 0
 Score: 0
 Score: 0
+Score: 2990
+Score: 4350
+Score: 4960
