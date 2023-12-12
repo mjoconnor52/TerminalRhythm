@@ -55,7 +55,6 @@ int create_random_song(double frequencies[], int letters[], double durations[]) 
         else {
             frequencies[genCount] = scale2->scale[location];
         }
-
         letters[genCount] = location; 
         durations[genCount] = return_winner_dur(location); 
         totalDuration += durations[genCount];

@@ -9,8 +9,8 @@
 const double quarter = 1;
 const double sixteenth = quarter / 4; 
 const double eighth = quarter / 2; 
-const double half = quarter * 2; 
-const double whole = quarter * 4; 
+const double half = quarter; 
+const double whole = quarter; 
 
 /** 
  * Array with possible durations for notes 
