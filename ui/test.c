@@ -5,112 +5,94 @@
 #include <time.h>
 #include <unistd.h>
 #include <ctype.h>
-#include "ui.h"
-#include "music-functions.h"
 
-Note notes[MAX_NUM_DURATIONS];
+#define WIDTH 50
+#define HEIGHT 20
+#define DROP_INTERVAL 500000  // Microseconds
+#define HIT_MARGIN 1          // Second
+#define NUM_NOTES 8
+#define MAX_SCORES 1000
+
+int current_note_index = 0;
+
+int note_sequence[] = {7, 0, 1, 3, 6, 0, 7, 1, 3, 0}; // Sequence of notes
+double durations[] = {1, 1, 1, 0.25, 0.5, 1, 1, 1, 1, 1}; // Corresponding durations in seconds
+int sequence_length = 10;
+
+
+typedef struct {
+    char letter;
+    int x, y;
+    bool active;
+    time_t dropTime;
+    int combo;
+} Note;
+
+Note notes[NUM_NOTES];
 int score = 0;
 int combo = 0;
-int current_note_index = 0;
-int sequence_length = 0; 
-int offset = 0; 
-
 pthread_mutex_t mutex;
+
 char notes_letters[8] = {'A','S','D', 'F', 'H', 'J','K','L'};
 
-/** initialize the notes by inputing the notes and corresponding duration and calculate when and where should a note drop on the ui
- *
- * \param note_sequence A string of music notes
- * 
- * \param durations The time each note will last
- *
- */
-void init_notes(int * note_sequence, double* durations) {
+void init_notes() {
     time_t currentTime;
     time(&currentTime);
     for (int i = 0; i < sequence_length; i++) {
         int index1 = note_sequence[i];
         notes[i].letter = notes_letters[index1];
-        // Calculte the x coordinates
         notes[i].x = note_sequence[i] * (WIDTH / NUM_NOTES) + (WIDTH / NUM_NOTES - 1) / 2;
-        // set active is false
         notes[i].active = false;
-        // Initial y postion is at 1
         notes[i].y = 1;
-        // If the note is the firt note
         if (i == 0){
-        // The droptime for first note is current time plus offset time + duration
-        notes[i].dropTime = currentTime + offset;
+        notes[i].dropTime = currentTime + 5 + durations[i];
         } else{
-        // Drop time for other notes is the drop time of the previous note plus the duration of the previous note
-        notes[i].dropTime = notes[i-1].dropTime + durations[i-1];
+        notes[i].dropTime = notes[i-1].dropTime + durations[i];
         }
         
     }
 }
 
-// check if a notes is suppose to drop at certain time in the ui
 void generate_note() {
-    
-    time_t currentTime2;
-    // Current time
-    time(&currentTime2);
-    // if the current index is less the number of notes and we are at or passed the drop time
-    if (current_note_index < sequence_length && difftime(currentTime2, notes[current_note_index].dropTime) >= 0) {
-    // set the note to be active meaning the note is reading to drop
+    time_t currentTime;
+    time(&currentTime);
+   
+    if (current_note_index < sequence_length && difftime(currentTime, notes[current_note_index].dropTime) >= 0) {
     notes[current_note_index].active = true;
     current_note_index++;
     }
 }
 
-// move te notes downward
 void move_notes() {
-    // Loop throught all the avaalable notes
     for (int i = 0; i < sequence_length; i++) {
-        // If the note  is active
         if (notes[i].active) {
-            // Move y corrdinate downward by incrementing
             notes[i].y++;
-            //If the note reach bottom
             if (notes[i].y > HEIGHT-1) {
-                // deactive the note
                 notes[i].active = false;
-                // set combo to 0 since the player missed the note
-                combo = 0;
             }
         }
     }
 }
 
-// Draw the board of ui
 void draw() {
     clear();
-    // draw the scoring line
     mvhline(HEIGHT - 2, 0, '-', WIDTH);
     mvhline(HEIGHT - 6, 0, '-', WIDTH);
-    // draw the reference letters at the top of the row
     for (int i = 0; i < NUM_NOTES; i++) {
         int location = i * (WIDTH / NUM_NOTES) + (WIDTH / NUM_NOTES - 1) / 2;
         mvaddch(0, location, notes_letters[i]);
     }
-    // draw the active notes
     for (int i = 0; i < sequence_length; i++) {
         if (notes[i].active) {
-        mvaddch(notes[i].y, notes[i].x, notes[i].letter);
+            mvaddch(notes[i].y, notes[i].x, notes[i].letter);
         }
     }
-    // print the score and combo at the bottom of the board
+    
     mvprintw(HEIGHT-1, 0, "Score: %d", score);
     mvprintw(HEIGHT, 0, "Combo: %d", combo);
-    // refresh the board
     refresh();
 }
 
-/** integrate generate note and move note together and use mutex to prevent race condition
- *
- * \param args remnant of thread
- * 
- */
 void *note_movement(void *args) {
     while (true) {
         pthread_mutex_lock(&mutex);
@@ -122,11 +104,6 @@ void *note_movement(void *args) {
     return NULL;
 }
 
-/** Write the final score to a file
- *
- * \param finalScore final score of a game
- * 
- */
 void record_score(int finalScore) {
     FILE *file = fopen("scores.txt", "a"); // Open scores.txt in append mode
     if (file == NULL) {
@@ -137,12 +114,6 @@ void record_score(int finalScore) {
     fclose(file); // Close the file
 }
 
-/** Read the score file
- *
- * \param scores[] scores array
- * 
- * \param max_scores maximum number of scores
- */
 int read_scores(int scores[], int max_scores) {
     FILE *file = fopen("scores.txt", "r");
     if (file == NULL) {
@@ -158,15 +129,7 @@ int read_scores(int scores[], int max_scores) {
     fclose(file);
     return count; // Return the number of scores read
 }
-
-/** find the max number of scores
- *
- * \param scores[] scores array
- * 
- * \param max_scores number of scores
- */
 void sort_scores(int scores[], int count) {
-    // Loop through the scores array to sort
     for (int i = 0; i < count - 1; i++) {
         for (int j = 0; j < count - i - 1; j++) {
             if (scores[j] < scores[j + 1]) {
@@ -178,20 +141,34 @@ void sort_scores(int scores[], int count) {
     }
 }
 
-/** Print the top 5 scores
- *
- * \param scores[] scores array
- * 
- * \param max_scores number of scores
- */
 void print_top_scores(int scores[], int count) {
     printf("Top Scores:\n");
     for (int i = 0; i < count && i < 5; i++) {
         printf("%d. %d\n", i + 1, scores[i]);
     }
 }
+// void check_input() {
+//     int ch = getch();
+//     if (ch != ERR) {
+//         ch = toupper(ch);
+//         time_t currentTime;
+//         time(&currentTime);
+        
+//         pthread_mutex_lock(&mutex);
+//         for (int i = 0; i < NUM_NOTES; i++) {
+//             if (notes[i].active && ch == notes[i].letter) {
+//                 double diff = difftime(currentTime, notes[i].dropTime);
+//                 if (abs(diff) <= HIT_MARGIN) {
+//                     score++;
+//                     notes[i].active = false;
+//                 }
+//             }
+//         }
+//         pthread_mutex_unlock(&mutex);
+//     }
+// }
 
-//check the input of the user to calculate score and combo
+
 void check_input() {
     int ch = getch();  // Get a character from the user
     if (ch != ERR) {  // If a key was pressed
@@ -199,38 +176,34 @@ void check_input() {
         
         pthread_mutex_lock(&mutex);  // Lock the mutex
         for (int i = 0; i < sequence_length; i++) {  // Loop through the notes
+            // printf("letter: notes_letters[index1]: %c \n", notes[i].letter);
             if (notes[i].active && ch == notes[i].letter) {  // If the note is active and the key matches
-                // Check if the note is within the perfect (middle) of scoring area
+                // Check if the note is within the bottom line HIT_MARGIN
                   if ((HEIGHT - 2 - notes[i].y) > HIT_MARGIN && (notes[i].y - HEIGHT +6) > HIT_MARGIN) {  
-                    //Increment combo
                     combo++;
-                    // If combo is greater than 10
                     if(combo >= 10){
-                        score = score+100*1.5; // Increase score with a multiplier 1.5
-                        notes[i].active = false;// Deactivate the note
-                     // If combo is greater than 20
+                        score = score+100*1.5;
+                        notes[i].active = false;
                     }else if(combo >= 20){
-                        score = score+100*2; // Increase score with a multiplier 2
+                        score = score+100*2;
                         notes[i].active = false;
                     }
                     else if (combo<10){
-                    score = score+100;   // Increase score with no multiplier
-                    notes[i].active = false;  
+                    score = score+100;  // Increase score
+                    notes[i].active = false;  // Deactivate the note
                     }
                     
                     
-                // Check if the note is barely hitting the scoring area
+                    
                 } else if((HEIGHT - 2 - notes[i].y) == 0) {
-                    // set combo to 0
                     combo = 0;
                     score = score+10;  // Increase score
                     notes[i].active = false;  // Deactivate the note
-                // Check if the note is barely hitting the scoring area
                 }else if((HEIGHT - 6 - notes[i].y) == 0) {
                     combo = 0;
                     score = score+10;  // Increase score
                     notes[i].active = false;  // Deactivate the note
-                // Check if the note is within the scoring area but not perfectly in the middle
+
                 }else if((HEIGHT - 6 - notes[i].y) < 0 && abs(HEIGHT - 6 - notes[i].y) <=HIT_MARGIN) {
                     
                     combo++;
@@ -245,7 +218,6 @@ void check_input() {
                     score = score+50;  // Increase score
                     notes[i].active = false;  // Deactivate the note
                     }
-                // Check if the note is within the scoring area but not perfectly in the middle
                 }else if((HEIGHT - 2 - notes[i].y) > 0 && abs(HEIGHT - 2 - notes[i].y) <=HIT_MARGIN) {
                    
                     combo++;
@@ -260,12 +232,12 @@ void check_input() {
                     score = score+50;  // Increase score
                     notes[i].active = false;  // Deactivate the note
                     }
-                // Check if the note is outside the scoreing area
+                    
                 }else if((HEIGHT - 6 - notes[i].y) > 0 && abs(HEIGHT - 6 - notes[i].y) <=HIT_MARGIN) {
                     score = score+10;  // Increase score
                     notes[i].active = false;  // Deactivate the note
                     combo = 0;
-                // Check if the note is outside the scoreing area
+                    
                 }else if((HEIGHT - 2 - notes[i].y) < 0 && abs(HEIGHT - 2 - notes[i].y) <=HIT_MARGIN) {
                     score = score+10;  // Increase score
                     notes[i].active = false;  // Deactivate the note
@@ -278,88 +250,38 @@ void check_input() {
     }
 }
 
-
-/**
- * A function that Check if the number of notes that are deactived
- * 
- * \return the number of deactived notes
-*/
-bool check_active(){
-    bool active =  true; 
-    int count = 0;
-    // Loop through all the notes to see how many note are deactive
-    for(int i = 0; i < sequence_length; i++){
-         if (notes[i].active == false){
-            count ++;
-         }   
-        }
+int main() {
     
-    if(count == sequence_length){
-        active = false;
-    }
-    // Return how many notes are deactived
-    return active; 
-}
-
-// A function that will print the high-scores found in the scores.txt file
-void print_scores(){
-    printf("Your Score: %d\n", score); 
-    int scores[MAX_SCORES];
-    int count = read_scores(scores, MAX_SCORES);
-    sort_scores(scores, count);
-    if(scores[0] == score){
-        printf("\n***NEW HIGH SCORE***\n\n"); 
-    }
-    print_top_scores(scores, count);
-}
-
-
-/** integrate everthing together and run the ui
- *
- * \param args remnant of thread
- * 
- */
-void * run_game(void* args) {
     srand(time(NULL));
-    // initializes the screen
     initscr();
-    // puts the terminal into "cbreak" mode
     cbreak();
-    // disables the echoing of characters typed by the user
     noecho();
-    // getch() will be non-blocking
     nodelay(stdscr, TRUE);
-    // makes the cursor invisible
     curs_set(0);
 
     pthread_t movement_thread;
-    thread_struct_t input_args = *((thread_struct_t *) args);
-
-    sequence_length = input_args.song_total_duration;  
-
     pthread_mutex_init(&mutex, NULL);
 
-    init_notes(input_args.index, input_args.duration);
+    init_notes();
+    
+    pthread_create(&movement_thread, NULL, note_movement, NULL);
 
-    // We need to sync up the music and game together
-    //sleep(8); 
-
-    pthread_create(&movement_thread, NULL, note_movement, &input_args);
-
-    // Looping while true
     while (true) {
-        // draw the board
         draw();
-        // check inpu
         check_input();
-        if (current_note_index == sequence_length && !check_active()) {  // End game condition
+
+        if (score >= 2000) {  // End game condition
             record_score(score);
             draw();
             break;
         }
 
-        usleep(50000); // Refresh rate
+        usleep(10000); // Refresh rate
     }
+
+    
+
+
 
     pthread_mutex_lock(&mutex);
     pthread_cancel(movement_thread);
@@ -373,7 +295,11 @@ void * run_game(void* args) {
     getch();
 
     endwin();
-    print_scores(); 
+    int scores[MAX_SCORES];
+    int count = read_scores(scores, MAX_SCORES);
+    sort_scores(scores, count);
+    print_top_scores(scores, count);
 
-    return NULL; 
+
+    return 0;
 }

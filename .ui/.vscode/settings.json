@@ -3,6 +3,7 @@
         "stdio.h": "c",
         "ncurses.h": "c",
         "curses.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "ctype.h": "c"
     }
 }
