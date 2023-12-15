@@ -350,7 +350,7 @@ void * run_game(void* args) {
     while (true) {
         // draw the board
         draw();
-        // check inpu
+        // check input
         check_input();
         if (current_note_index == sequence_length && !check_active()) {  // End game condition
             record_score(score);

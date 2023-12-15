@@ -7,7 +7,7 @@ all: game-manager
 clean:
 	rm -f *.o
 	rm -f audioOutput
-	rm -f prototype
+	rm -f prototype-exe
 
 
 game-manager: game-manager.c  music-functions.o notes.o lottery.o ui.o
