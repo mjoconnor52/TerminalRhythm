@@ -25,10 +25,7 @@ void music_func_init(){
 */
 int create_random_song(double frequencies[], int letters[], double durations[]) { 
 
-//    double selected_notes[MAX_NUM_FREQUENCIES]; 
-//    double selected_durations[MAX_NUM_DURATIONS]; 
-//    int selected_letters[MAX_NUM_FREQUENCIES]; 
-   //Starting at the tonic
+   // Starting at the tonic
 
    int location = 0; 
 
@@ -43,58 +40,85 @@ int create_random_song(double frequencies[], int letters[], double durations[]) 
    durations[location] = return_winner_dur(location); 
    letters[location] = location;  
 
-
+   // Stores a sum for the number of notes generated 
    int genCount = 0; 
+
+   // Stores a sum for the total duration of notes generated 
    double totalDuration = 0; 
+
+   // Dividing into three sections. 
+   // Used to have three sections which pull key from scale1, scale2, 
+   // and back to scale1 
    int sections = MAX_NUM_FREQUENCIES / 3; 
+
+   // While the MAX_DURATION or MAX_NUM_FREQUENCIES are not exceeded 
    while (totalDuration < MAX_DURATION && genCount < MAX_NUM_FREQUENCIES) {
+        // Selecting a pitch (number / scale degree)
         location = return_winner(location); 
+        // Section 1 or 3 (scale1)
         if (genCount < sections || (genCount > sections * 2)) { 
             frequencies[genCount] = scale->scale[location];
         } 
+        // Section 2 (scale2)
         else {
             frequencies[genCount] = scale2->scale[location];
         }
+        // Storing values 
         letters[genCount] = location; 
         durations[genCount] = return_winner_dur(location); 
+        // Incrementing loop parameters 
         totalDuration += durations[genCount];
         genCount++; 
    } 
-
-
-    // Copying the new elements into the array
-    // I just realized this may not be needed lol
-    // memcpy(frequencies, selected_notes, sizeof(double) * MAX_NUM_FREQUENCIES); 
-    // memcpy(letters, selected_letters, sizeof(int) * MAX_NUM_FREQUENCIES); 
-    // memcpy(durations, selected_durations, sizeof(double) * MAX_NUM_DURATIONS); 
 
     return genCount; 
 
 } 
 
-// This function is done 
+/** This function utilizes the SDL2 package generate sine waves and store them in a buffer. 
+ *  Durations are used for the length of waves, and frequencies are used for pitch. 
+ * 
+ *  \param buffer Holds the audio information 
+ *  \param frequency Array of frequencies in hertz 
+ *  \param duration Array of durations in seconds 
+ *  \note  Citation: Used ChatGPT to troubleshoot combining the pieces of this function. 
+ *        
+*/
 void generateSineWave(Uint8 *buffer, double frequency, double duration) {
     Uint32 length = (Uint32)(SAMPLE_RATE * duration);
     double timeStep = 1.0 / SAMPLE_RATE; 
 
+    // Creating a wave 
     for (Uint32 i = 0; i < length; ++i) {
         double t = i * timeStep;
         double wave = sin(2.0 * M_PI * frequency * t);
         Sint16 sample = (Sint16)(wave * AMPLITUDE);
 
+        // Storing in buffer 
         buffer[i * 2] = (Uint8)(sample & 0xFF);
         buffer[i * 2 + 1] = (Uint8)((sample >> 8) & 0xFF);
     }
 }
 
-// This function is done 
-int playMusic(double frequencies[], double durations[], int count) {
+/** This function utilizes the SDL2 package to play music from a machine's speakers. 
+ *  An audio device is set up and the generateSineWave function stores frequency and duration 
+ *  in a buffer. The device plays the sound, frees the buffer, and then takes in the next 
+ *  frequency/duration pair. Repeat with delay until the end of the arrays. 
+ * 
+ *  \param frequency Array of frequencies in hertz 
+ *  \param duration Array of durations in seconds 
+ *  \param count The length of the frequencies / durations arrays 
+ *  \note  Citation: Used ChatGPT to troubleshoot combining the pieces of this function. 
+ *        
+*/
+void playMusic(double frequencies[], double durations[], int count) {
 
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return 1;
     }
 
+    // Audio device set up 
     SDL_AudioSpec audioSpec;
     audioSpec.freq = SAMPLE_RATE;
     audioSpec.format = AUDIO_S16SYS;
@@ -102,6 +126,7 @@ int playMusic(double frequencies[], double durations[], int count) {
     audioSpec.samples = 4096;
     audioSpec.callback = NULL;
 
+    // Opening 
     SDL_AudioDeviceID audioDevice = SDL_OpenAudioDevice(NULL, 0, &audioSpec, NULL, 0);
     if (audioDevice == 0) {
         fprintf(stderr, "SDL could not open audio device! SDL_Error: %s\n", SDL_GetError());
@@ -110,7 +135,7 @@ int playMusic(double frequencies[], double durations[], int count) {
 
     SDL_PauseAudioDevice(audioDevice, 0);
 
-    // In order to make the notes play somewhat unified, we will want to make the buffer bigger
+    // Loading pitches from the buffer 
     for (size_t i = 0; i < count; ++i) {
         Uint32 length = (Uint32)(SAMPLE_RATE * durations[i]);
         Uint8 *buffer = (Uint8 *)malloc(length * 2);  // 2 bytes per sample for AUDIO_S16SYS
@@ -124,10 +149,10 @@ int playMusic(double frequencies[], double durations[], int count) {
         SDL_Delay((Uint32)(durations[i] * 1000));
     }
 
+    // Clean up 
     SDL_CloseAudioDevice(audioDevice);
     SDL_Quit();
 
-    return 0;
 } 
 
 void cleanup_mem(){

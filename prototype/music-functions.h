@@ -41,7 +41,7 @@ int create_random_song(double frequencies[], int letters[], double durations[]);
 
 void generateSineWave(Uint8 *buffer, double frequency, double duration); 
 
-int playMusic(double frequencies[], double durations[], int count); 
+void playMusic(double frequencies[], double durations[], int count); 
 
 void cleanup_mem(); 
 
