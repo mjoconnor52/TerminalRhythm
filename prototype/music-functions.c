@@ -115,7 +115,7 @@ void playMusic(double frequencies[], double durations[], int count) {
 
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-        return 1;
+        return; 
     }
 
     // Audio device set up 
@@ -130,7 +130,7 @@ void playMusic(double frequencies[], double durations[], int count) {
     SDL_AudioDeviceID audioDevice = SDL_OpenAudioDevice(NULL, 0, &audioSpec, NULL, 0);
     if (audioDevice == 0) {
         fprintf(stderr, "SDL could not open audio device! SDL_Error: %s\n", SDL_GetError());
-        return 1;
+        return; 
     }
 
     SDL_PauseAudioDevice(audioDevice, 0);
