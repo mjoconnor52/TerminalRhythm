@@ -4,7 +4,7 @@ A terminal rhythm that we made for CSC 213, Grinnell's Computer Architecture Cou
 Project Created by Jim Deng, Sam Rudenberg and Mikey O'Connor
 
 ## Project Idea
-This project is a Terminal Rhythm game that randomly generates music for you to play along with. It will also keep track of a points with a combo system and save it to the scores.txt file. The music will be determined by a randomly generated scale and played for approximately 20 seconds. If you want to increase the playing time, edit MAX_DURATIONS in the music-functions.c file. 
+This project is a terminal rhythm game that randomly generates music for you to play along with. It will also keep track of a points with a combo system and save it to the scores.txt file. The music will be determined by a randomly generated scale and played for approximately 20 seconds. If you want to increase the playing time, edit MAX_DURATIONS in the music-functions.c file. 
 
 I bet you can't beat my high score of 1875. 
 
