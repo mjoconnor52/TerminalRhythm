@@ -1,5 +1,5 @@
 # TerminalRhythm
-A terminal rhythm that we made for CSC 213
+A terminal rhythm that we made for CSC 213, Grinnell's Computer Aricheture Course
 
 Project Created by Jim Deng, Sam Rudenberg and Mikey O'Connor
 
